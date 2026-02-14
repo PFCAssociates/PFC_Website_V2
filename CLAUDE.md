@@ -32,12 +32,13 @@ Each GAS project has a code file and a corresponding embedding page. Register th
 
 ## Commit Message Naming
 - **Every commit message MUST start with the version number(s) being updated**
+- Both version types use the `v` prefix (meaning "version") — the suffix indicates the type: `g` = Google Apps Script, `w` = website
 - If a `.gs` file was updated: prefix with `v{VERSION}` (e.g. `v01.19g`)
-- If an embedding HTML page was updated: prefix with `w{BUILD_VERSION}` (e.g. `w01.12w`)
-- If both were updated in the same commit: include both (e.g. `v01.19g w01.12w`)
+- If an embedding HTML page was updated: prefix with `v{BUILD_VERSION}` (e.g. `v01.12w`)
+- If both were updated in the same commit: include both (e.g. `v01.19g v01.12w`)
 - If neither was updated: no version prefix needed
 - Example: `v01.19g Fix sign-in popup to auto-close after authentication`
-- Example: `v01.19g w01.12w Add auth wall with build version bump`
+- Example: `v01.19g v01.12w Add auth wall with build version bump`
 
 ## GAS Code Constraints
 - **All GAS `.gs` code must be valid Google Apps Script syntax** — test mentally that strings, escapes, and quotes parse correctly before committing
