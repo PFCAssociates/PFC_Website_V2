@@ -32,15 +32,15 @@ Each GAS project has a code file and a corresponding embedding page. Register th
 
 ### Auto-Refresh via version.txt Polling
 - **All embedding pages must use the `version.txt` polling method** — do NOT poll the page's own HTML
-- **Version file naming**: the version file must be named `<page-name>-version.txt`, matching the HTML file it tracks (e.g. `index.html` → `index-version.txt`, `dashboard.html` → `dashboard-version.txt`)
+- **Version file naming**: the version file must be named `<page-name>.version.txt`, matching the HTML file it tracks (e.g. `index.html` → `index.version.txt`, `dashboard.html` → `dashboard.version.txt`). The `.version.txt` double extension ensures the version file sorts **after** the `.html` file alphabetically
 - Each version file holds only the current build-version string (e.g. `01.08w`)
-- **When bumping `build-version` in an HTML page, also update the corresponding `<page-name>-version.txt`** to the same value
+- **When bumping `build-version` in an HTML page, also update the corresponding `<page-name>.version.txt`** to the same value
 - The polling logic fetches the version file (~7 bytes) instead of the full HTML page, reducing bandwidth per poll from kilobytes to bytes
 - URL resolution: derive the version file URL relative to the current page's directory, using the page's own filename:
   ```javascript
   var basePath = window.location.href.split('?')[0];
   var pageName = basePath.substring(basePath.lastIndexOf('/') + 1).replace('.html', '');
-  var versionUrl = basePath.substring(0, basePath.lastIndexOf('/') + 1) + pageName + '-version.txt';
+  var versionUrl = basePath.substring(0, basePath.lastIndexOf('/') + 1) + pageName + '.version.txt';
   ```
 - Cache-bust with a query param: `fetch(versionUrl + '?_cb=' + Date.now(), { cache: 'no-store' })`
 - Compare the trimmed response text against the page's `<meta name="build-version">` content
@@ -56,10 +56,10 @@ When creating a **new** HTML embedding page, follow every step below:
    - Green "Website Ready" splash overlay + sound playback
    - AudioContext handling and screen wake lock
 2. **Choose the directory** — create a new subdirectory under `httpsdocs/` named after the project (e.g. `httpsdocs/my-project/`)
-3. **Create the version file** — place a `<page-name>-version.txt` file in the **same directory** as the HTML page (e.g. `index-version.txt` for `index.html`), containing only the initial build-version string (e.g. `01.00w`)
+3. **Create the version file** — place a `<page-name>.version.txt` file in the **same directory** as the HTML page (e.g. `index.version.txt` for `index.html`), containing only the initial build-version string (e.g. `01.00w`)
 4. **Update the polling URL in the template** — ensure the JS version-file URL derivation matches the HTML filename (the template defaults to deriving it from the page's own filename)
 5. **Create `sounds/` directory** — copy the `sounds/` folder (containing `Website_Ready_Voice_1.mp3`) into the new page's directory so the splash sound works
-6. **Set the initial build-version** — in the HTML `<head>`, set `<meta name="build-version" content="01.00w">` and match it in `<page-name>-version.txt`
+6. **Set the initial build-version** — in the HTML `<head>`, set `<meta name="build-version" content="01.00w">` and match it in `<page-name>.version.txt`
 7. **Update the page title** — replace `YOUR_PROJECT_TITLE` in `<title>` with the actual project name
 8. **Register in GAS Projects table** — if this page embeds a GAS iframe, add a row to the GAS Projects table in the Version Bumping section above
 9. **Add developer branding** — ensure `<!-- Developed by: ShadowAISolutions -->` is the last line of the HTML file
@@ -69,11 +69,11 @@ When creating a **new** HTML embedding page, follow every step below:
 httpsdocs/
 ├── <page-name>/
 │   ├── index.html               # The embedding page (from template)
-│   ├── index-version.txt        # Tracks index.html build-version (e.g. "01.00w")
+│   ├── index.version.txt        # Tracks index.html build-version (e.g. "01.00w")
 │   └── sounds/
 │       └── Website_Ready_Voice_1.mp3
 ```
-For pages that live directly in `httpsdocs/` (not in a subdirectory), the version file and `sounds/` folder sit alongside the HTML file (e.g. `httpsdocs/index.html` + `httpsdocs/index-version.txt`).
+For pages that live directly in `httpsdocs/` (not in a subdirectory), the version file and `sounds/` folder sit alongside the HTML file (e.g. `httpsdocs/index.html` + `httpsdocs/index.version.txt`).
 
 ## Commit Message Naming
 - **Every commit message MUST start with the version number(s) being updated**
