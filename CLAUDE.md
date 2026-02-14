@@ -71,6 +71,13 @@ Each GAS project has a code file and a corresponding embedding page. Register th
 - This applies to both GAS `.gs` code and parent embedding pages (`.html`)
 - Use overlay + modal patterns consistent with the existing sheet/modal styles in the codebase
 
+## Phantom Edit (Timestamp Alignment)
+- When the user asks for a **phantom edit** or **phantom update**, touch every file in the repo with a no-op change so all files share the same commit timestamp on GitHub
+- **Skip all version bumps** — do NOT increment `build-version` in HTML pages or `VERSION` in `.gs` files
+- For text files: add a trailing newline
+- For binary files (e.g. `.mp3`): append a null byte
+- Commit message: `Phantom edit to align all file timestamps on GitHub` (no version prefix)
+
 ## Execution Style
 - For clear, straightforward requests: **just do it** — make the changes, commit, and push without asking for plan approval
 - Only ask clarifying questions when the request is genuinely ambiguous or has multiple valid interpretations
