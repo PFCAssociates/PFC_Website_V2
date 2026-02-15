@@ -30,10 +30,11 @@ demorepo4/
 │   └── sounds/                 # Audio feedback files
 ├── autoUpdateTemplateFiles/    # Template for new pages
 ├── .github/workflows/          # CI/CD pipeline
-├── ARCHITECTURE.md             # System diagram (Mermaid)
-├── CHANGELOG.md                # Version history
+├── docs/
+│   ├── ARCHITECTURE.md         # System diagram (Mermaid)
+│   ├── CHANGELOG.md            # Version history
+│   └── STATUS.md               # Project status dashboard
 ├── CLAUDE.md                   # Developer instructions
-├── STATUS.md                   # Project status dashboard
 └── LICENSE                     # Proprietary license
 ```
 
@@ -41,9 +42,9 @@ demorepo4/
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Visual system diagram (Mermaid) |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Visual system diagram (Mermaid) |
 | [CLAUDE.md](CLAUDE.md) | Developer instructions and conventions |
-| [CHANGELOG.md](CHANGELOG.md) | Version history |
-| [STATUS.md](STATUS.md) | Current project status and versions |
+| [CHANGELOG.md](docs/CHANGELOG.md) | Version history |
+| [STATUS.md](docs/STATUS.md) | Current project status and versions |
 
 Developed by: ShadowAISolutions
