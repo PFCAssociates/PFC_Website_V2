@@ -62,9 +62,10 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 
 ## Initialize Command
 If the user's prompt is just **"initialize"** (after the Session Start Checklist has completed):
-1. Update the `Last updated:` timestamp in `README.md` to the real current time
-2. Commit with message `Initialize deployment`
-3. Push to the `claude/*` branch
+1. **Verify placeholders are resolved** — confirm that `repository-information/STATUS.md` no longer contains `*(deploy to activate)*` (drift check step #4 should have replaced it). If it's still there, replace it now with `[View](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME/)` (resolved values)
+2. Update the `Last updated:` timestamp in `README.md` to the real current time
+3. Commit with message `Initialize deployment`
+4. Push to the `claude/*` branch
 
 This triggers the auto-merge workflow, which merges into `main` and deploys to GitHub Pages — populating the live site for the first time. No other changes are needed.
 
