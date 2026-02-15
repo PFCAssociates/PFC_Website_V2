@@ -1,8 +1,8 @@
-# demorepo5
+# autoupdatehtmltemplate
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-**Live site:** [ShadowAISolutions.github.io/demorepo5](https://ShadowAISolutions.github.io/demorepo5)
+You are currently using the **autoupdatehtmltemplate**, update your code and claude will update the live site link here
 
 ## How It Works
 
@@ -23,7 +23,7 @@ Google Apps Script projects are embedded as iframes in GitHub Pages. The framewo
 ## Project Structure
 
 ```
-demorepo5/
+autoupdatehtmltemplate/
 ├── live-site-pages/             # Deployed to GitHub Pages
 │   ├── index.html              # Live landing page
 │   ├── index.version.txt       # Version file for auto-refresh

@@ -7,7 +7,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
 | Variable | Value | Where it appears |
 |----------|-------|------------------|
 | `YOUR_ORG_NAME` | `ShadowAISolutions` | LICENSE, README (live site link, "Developed by:" footer), CITATION.cff, "Developed by:" footers, FUNDING.yml, issue templates, GOVERNANCE, SUPPORT, SECURITY, ARCHITECTURE, STATUS, CONTRIBUTING, PR template, workflow file |
-| `YOUR_REPO_NAME` | `demorepo5` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
+| `YOUR_REPO_NAME` | `autoupdatehtmltemplate` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
 | `COMPANY_LOGO_URL` | `https://pfcassociates.github.io/PFC_Website/PFC_images/PFC_LOGO_4_Transparent.png` | Available for use in pages that need the company logo |
 
