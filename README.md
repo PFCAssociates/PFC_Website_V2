@@ -37,7 +37,7 @@ autoupdatehtmltemplate/
 │   ├── CONTRIBUTING.md         # How to contribute
 │   ├── SECURITY.md             # Vulnerability reporting
 │   └── FUNDING.yml             # Sponsor button config
-├── repo-info/
+├── repository-information/
 │   ├── ARCHITECTURE.md         # System diagram (Mermaid)
 │   ├── CHANGELOG.md            # Version history
 │   ├── GOVERNANCE.md           # Project governance
@@ -52,10 +52,10 @@ autoupdatehtmltemplate/
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE.md](repo-info/ARCHITECTURE.md) | Visual system diagram (Mermaid) |
-| [CHANGELOG.md](repo-info/CHANGELOG.md) | Version history |
+| [ARCHITECTURE.md](repository-information/ARCHITECTURE.md) | Visual system diagram (Mermaid) |
+| [CHANGELOG.md](repository-information/CHANGELOG.md) | Version history |
 | [CLAUDE.md](CLAUDE.md) | Developer instructions and conventions |
-| [STATUS.md](repo-info/STATUS.md) | Current project status and versions |
+| [STATUS.md](repository-information/STATUS.md) | Current project status and versions |
 
 ## Community
 
@@ -64,8 +64,8 @@ autoupdatehtmltemplate/
 | [Code of Conduct](.github/CODE_OF_CONDUCT.md) | Community standards and expectations |
 | [Contributing](.github/CONTRIBUTING.md) | How to contribute to this project |
 | [Security Policy](.github/SECURITY.md) | How to report vulnerabilities |
-| [Support](repo-info/SUPPORT.md) | Getting help |
-| [Governance](repo-info/GOVERNANCE.md) | Project ownership and decision making |
+| [Support](repository-information/SUPPORT.md) | Getting help |
+| [Governance](repository-information/GOVERNANCE.md) | Project ownership and decision making |
 
 Developed by: ShadowAISolutions
 

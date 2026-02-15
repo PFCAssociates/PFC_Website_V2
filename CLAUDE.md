@@ -141,7 +141,7 @@ For pages that live directly in `live-site-pages/` (not in a subdirectory), the 
 - **Skip all version bumps** — do NOT increment `build-version` in HTML pages or `VERSION` in `.gs` files
 - For text files: add a trailing newline
 - For binary files (e.g. `.mp3`): append a null byte
-- **Reset `repo-info/CHANGELOG.md`** — replace all entries with a fresh template (keep the header, version suffix note, and an empty `[Unreleased]` section with `*(No changes yet)*`). This gives the repo a clean history starting point
+- **Reset `repository-information/CHANGELOG.md`** — replace all entries with a fresh template (keep the header, version suffix note, and an empty `[Unreleased]` section with `*(No changes yet)*`). This gives the repo a clean history starting point
 - Commit message: `Phantom edit to align all file timestamps on GitHub` (no version prefix)
 
 ## Execution Style
@@ -192,9 +192,9 @@ After every change, review whether any of the following documentation files need
 | File | Update when... |
 |------|---------------|
 | `README.md` | Project structure changes (new directories, files moved), new features added, "How it Works" sections become outdated, new documentation files are created |
-| `repo-info/ARCHITECTURE.md` | System components change, new data flows are added, CI/CD pipeline is modified, new GAS projects or embedding pages are introduced |
-| `repo-info/CHANGELOG.md` | **Every user-facing change** — new features, bug fixes, infrastructure changes. Add an entry under the current version heading |
-| `repo-info/STATUS.md` | A new page or GAS project is added/removed, a version number changes, deployment status changes |
+| `repository-information/ARCHITECTURE.md` | System components change, new data flows are added, CI/CD pipeline is modified, new GAS projects or embedding pages are introduced |
+| `repository-information/CHANGELOG.md` | **Every user-facing change** — new features, bug fixes, infrastructure changes. Add an entry under the current version heading |
+| `repository-information/STATUS.md` | A new page or GAS project is added/removed, a version number changes, deployment status changes |
 | `.gitignore` | New file types or tooling is introduced that generates artifacts (e.g. adding Node tooling, Python venvs, build outputs) |
 | `.editorconfig` | New file types are introduced that need specific formatting rules |
 | `.github/CONTRIBUTING.md` | Development workflow changes, new conventions are added to CLAUDE.md that contributors need to know |
