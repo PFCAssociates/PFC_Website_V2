@@ -7,7 +7,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
 | Variable | Value | Where it appears |
 |----------|-------|------------------|
 | `YOUR_ORG_NAME` | `ShadowAISolutions` | LICENSE, README, CITATION.cff, "Developed by:" footers, FUNDING.yml, issue templates, GOVERNANCE, SUPPORT, SECURITY, ARCHITECTURE, STATUS, CONTRIBUTING, PR template, workflow file |
-| `YOUR_REPO_NAME` | `YOUR_REPO_NAME` | README title/structure tree, CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
+| `YOUR_REPO_NAME` | `demorepo4` | README title/structure tree, CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
 | `COMPANY_LOGO_URL` | `https://pfcassociates.github.io/PFC_Website/PFC_images/PFC_LOGO_4_Transparent.png` | Available for use in pages that need the company logo |
 
@@ -15,7 +15,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
 - **In code files** (HTML, YAML, Markdown, etc.): use the **resolved value** (e.g. write `ShadowAISolutions`, not `YOUR_ORG_NAME`)
 - **In CLAUDE.md instructions**: the placeholder names (`YOUR_ORG_NAME`, etc.) may appear in examples and rules — Claude Code resolves them using the table above
 - **When a value changes**: update the table above, then propagate the new value to every file listed in the "Where it appears" column
-- **`YOUR_REPO_NAME`** is intentionally left as a placeholder — set it to the actual repo name after cloning this template
+- **`YOUR_REPO_NAME`** — when cloning this template for a new repo, update its value in the table above to the new repo name, then propagate to all files listed
 
 ## Deployment Flow
 - Never push directly to `main`
