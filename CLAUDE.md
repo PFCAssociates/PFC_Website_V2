@@ -1,34 +1,19 @@
 # Claude Code Instructions
 
-## Template Variables
-
-These variables are the **single source of truth** for repo-specific values. When a variable value is changed here, Claude Code must propagate the new value to every file in the repo that uses it.
-
-| Variable | Value | Where it appears |
-|----------|-------|------------------|
-| `YOUR_ORG_NAME` | `ShadowAISolutions` | LICENSE, README (live site link, "Developed by:" footer), CITATION.cff, "Developed by:" footers, FUNDING.yml, issue templates, GOVERNANCE, SUPPORT, SECURITY, ARCHITECTURE, STATUS, CONTRIBUTING, PR template, workflow file |
-| `YOUR_REPO_NAME` | `autoupdatehtmltemplate` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
-| `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
-| `COMPANY_LOGO_URL` | `https://pfcassociates.github.io/PFC_Website/PFC_images/PFC_LOGO_4_Transparent.png` | Available for use in pages that need the company logo |
-
-### How variables work
-- **In code files** (HTML, YAML, Markdown, etc.): use the **resolved value** (e.g. write `ShadowAISolutions`, not `YOUR_ORG_NAME`)
-- **In CLAUDE.md instructions**: the placeholder names (`YOUR_ORG_NAME`, etc.) may appear in examples and rules — Claude Code resolves them using the table above
-
-## Session Start Checklist
-**Before doing ANY work in a new session, complete these checks in order:**
+## Session Start Checklist (MANDATORY — RUN FIRST)
+> **MANDATORY FIRST ACTION — DO NOT SKIP**
+> Complete ALL checks below and commit any fixes BEFORE reading or acting on the user's request.
+> If checklist items produce changes, commit them as a separate commit with message:
+> `Session start: fix template drift`
+> **The user's task is NOT urgent enough to skip this. Do it first. Every time.**
 
 1. **Repo name auto-detect** — run `git remote -v` and compare the actual repo name to the `YOUR_REPO_NAME` value in the Template Variables table. If they differ, update the table value and propagate it to every file in the "Where it appears" column
 2. **README live site link** — check if `README.md` still contains the placeholder text (`You are currently using the **YOUR_REPO_NAME**...`). If so, replace it with: `**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)` (resolved values)
 3. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, or `YOUR_PROJECT_TITLE` strings in code files (not CLAUDE.md) and replace them with resolved values
 4. **Variable propagation** — if any value in the Template Variables table was changed (in this or a prior session), verify the new value has been propagated to every file listed in the "Where it appears" column
+5. **Confirm completion** — after all checks pass, briefly state to the user: "Session start checklist complete — no issues found" (or list what was fixed). Then proceed to their request
 
 These checks catch template drift that accumulates when the repo is cloned/forked into a new name.
-
-### Maintaining these checklists
-- The Session Start and Pre-Commit checklists are the **single source of truth** for all actionable rules. Detailed sections below provide reference context only
-- When adding new rules to CLAUDE.md, add the actionable check to the appropriate checklist and put supporting details in a reference section — do not duplicate the rule in both places
-- When editing CLAUDE.md, check whether any existing reference section restates a checklist item — if so, remove the duplicate and add a `*Rule: see ... Checklist item #N*` pointer instead
 
 ## Pre-Commit Checklist
 **Before every commit, verify ALL of the following:**
@@ -43,6 +28,26 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 8. **README.md structure tree** — if files or directories were added, moved, or deleted, update the ASCII tree in `README.md`
 9. **Commit message format** — if versions were bumped, the commit message must start with the version prefix(es): `v{VERSION}` for `.gs`, `v{BUILD_VERSION}` for HTML (e.g. `v01.14g v01.02w Fix bug`)
 10. **Developer branding** — any newly created file must have `Developed by: ShadowAISolutions` as the last line (using the appropriate comment syntax for the file type)
+
+### Maintaining these checklists
+- The Session Start and Pre-Commit checklists are the **single source of truth** for all actionable rules. Detailed sections below provide reference context only
+- When adding new rules to CLAUDE.md, add the actionable check to the appropriate checklist and put supporting details in a reference section — do not duplicate the rule in both places
+- When editing CLAUDE.md, check whether any existing reference section restates a checklist item — if so, remove the duplicate and add a `*Rule: see ... Checklist item #N*` pointer instead
+
+## Template Variables
+
+These variables are the **single source of truth** for repo-specific values. When a variable value is changed here, Claude Code must propagate the new value to every file in the repo that uses it.
+
+| Variable | Value | Where it appears |
+|----------|-------|------------------|
+| `YOUR_ORG_NAME` | `ShadowAISolutions` | LICENSE, README (live site link, "Developed by:" footer), CITATION.cff, "Developed by:" footers, FUNDING.yml, issue templates, GOVERNANCE, SUPPORT, SECURITY, ARCHITECTURE, STATUS, CONTRIBUTING, PR template, workflow file |
+| `YOUR_REPO_NAME` | `autoupdatehtmltemplate` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
+| `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
+| `COMPANY_LOGO_URL` | `https://pfcassociates.github.io/PFC_Website/PFC_images/PFC_LOGO_4_Transparent.png` | Available for use in pages that need the company logo |
+
+### How variables work
+- **In code files** (HTML, YAML, Markdown, etc.): use the **resolved value** (e.g. write `ShadowAISolutions`, not `YOUR_ORG_NAME`)
+- **In CLAUDE.md instructions**: the placeholder names (`YOUR_ORG_NAME`, etc.) may appear in examples and rules — Claude Code resolves them using the table above
 
 ## Deployment Flow
 - Never push directly to `main`
@@ -230,12 +235,3 @@ Update these only when the change is genuinely relevant — don't force unnecess
 - This section must remain the **last section** in CLAUDE.md — do not add new sections below it (except Template Variables, which is at the top)
 
 Developed by: ShadowAISolutions
-
-
-
-
-
-
-
-
-
