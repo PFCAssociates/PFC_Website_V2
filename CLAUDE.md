@@ -167,6 +167,30 @@ When a GAS app embedded in a GitHub Pages iframe needs Google sign-in (e.g. to r
 | `gas-needs-auth` | GAS iframe → parent | Tells parent to show sign-in wall (includes `authStatus`, `email`) |
 | `gas-auth-complete` | GAS iframe → parent | Tells parent auth succeeded (hides wall, reloads iframe) |
 
+## Keeping Documentation Files in Sync
+
+After every change, review whether any of the following documentation files need updating. **If a change affects what these files describe, update them in the same commit.**
+
+| File | Update when... |
+|------|---------------|
+| `README.md` | Project structure changes (new directories, files moved), new features added, "How it Works" sections become outdated, new documentation files are created |
+| `docs/ARCHITECTURE.md` | System components change, new data flows are added, CI/CD pipeline is modified, new GAS projects or embedding pages are introduced |
+| `docs/CHANGELOG.md` | **Every user-facing change** — new features, bug fixes, infrastructure changes. Add an entry under the current version heading |
+| `docs/STATUS.md` | A new page or GAS project is added/removed, a version number changes, deployment status changes |
+| `.gitignore` | New file types or tooling is introduced that generates artifacts (e.g. adding Node tooling, Python venvs, build outputs) |
+| `.editorconfig` | New file types are introduced that need specific formatting rules |
+| `docs/CONTRIBUTING.md` | Development workflow changes, new conventions are added to CLAUDE.md that contributors need to know |
+| `docs/SECURITY.md` | New attack surfaces are added (e.g. new API endpoints, new OAuth flows, new deployment targets) |
+| `CITATION.cff` | Project name, description, authors, or URLs change |
+| `.github/ISSUE_TEMPLATE/*.yml` | New project areas are added (update the "Affected Area" / "Area" dropdown options) |
+| `.github/PULL_REQUEST_TEMPLATE.md` | New checklist items become relevant (e.g. new conventions, new mandatory checks) |
+
+### Rules
+- **CHANGELOG.md is mandatory** — every commit that changes user-facing behavior must add a changelog entry
+- **README.md structure tree** — keep the project structure ASCII tree accurate whenever files/directories are added, moved, or deleted
+- **STATUS.md versions** — whenever a version is bumped (`.gs` or `.html`), update the corresponding version in STATUS.md
+- Other files: update only when the change is genuinely relevant — don't force unnecessary edits
+
 ## Developer Branding
 - **Every code file** in this repo must have a comment at the very bottom: `Developed by: ShadowAISolutions`
 - Use the appropriate comment syntax for each file type:
