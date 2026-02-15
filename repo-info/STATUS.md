@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `live-site/index.html` | v01.00w | [View](https://ShadowAISolutions.github.io/demorepo4/) | Active |
+| Landing Page | `live-site-pages/index.html` | v01.00w | [View](https://ShadowAISolutions.github.io/demorepo4/) | Active |
 
 ## GAS Projects
 

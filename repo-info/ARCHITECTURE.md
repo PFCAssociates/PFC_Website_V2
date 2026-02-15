@@ -17,7 +17,7 @@ graph TB
             CB --> TRIGGER
             TRIGGER -->|Yes| MERGE["Merge into main"]
             MERGE --> DIFF["Check git diff"]
-            DIFF -->|"live-site/ changed"| PAGES_FLAG["pages-changed = true"]
+            DIFF -->|"live-site-pages/ changed"| PAGES_FLAG["pages-changed = true"]
             DIFF -->|".gs changed"| GAS_DEPLOY["Deploy GAS via curl POST\n(no GAS projects yet)"]
             GAS_DEPLOY --> DELETE_BR
             MERGE --> DELETE_BR["Delete claude/* branch"]
@@ -26,12 +26,12 @@ graph TB
         end
 
         subgraph "GitHub Pages Deployment"
-            DEPLOY_PAGES["Deploy live-site/ to\nGitHub Pages"]
+            DEPLOY_PAGES["Deploy live-site-pages/ to\nGitHub Pages"]
             LIVE["Live Site\nShadowAISolutions.github.io/demorepo4"]
             DEPLOY_PAGES --> LIVE
         end
 
-        subgraph "live-site/ — Hosted Content"
+        subgraph "live-site-pages/ — Hosted Content"
             direction LR
             INDEX["index.html\n(build-version: 01.00w)"]
             VERTXT["index.version.txt\n(01.00w)"]

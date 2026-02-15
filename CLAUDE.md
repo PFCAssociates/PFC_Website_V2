@@ -21,7 +21,7 @@ Each GAS project has a code file and a corresponding embedding page. Register th
 
 | Project | Code File | Embedding Page |
 |---------|-----------|----------------|
-| *(Project name)* | `googleAppsScripts/<Project Name>/<CodeFile>.gs` | `live-site/<page-name>.html` |
+| *(Project name)* | `googleAppsScripts/<Project Name>/<CodeFile>.gs` | `live-site-pages/<page-name>.html` |
 
 ## Build Version (Auto-Refresh for embedding pages)
 - **Every commit that modifies an embedding HTML page MUST increment its `build-version` meta tag by 0.01**
@@ -58,7 +58,7 @@ When creating a **new** HTML embedding page, follow every step below:
    - Version indicator pill (bottom-right corner)
    - Green "Website Ready" splash overlay + sound playback
    - AudioContext handling and screen wake lock
-2. **Choose the directory** — create a new subdirectory under `live-site/` named after the project (e.g. `live-site/my-project/`)
+2. **Choose the directory** — create a new subdirectory under `live-site-pages/` named after the project (e.g. `live-site-pages/my-project/`)
 3. **Create the version file** — place a `<page-name>.version.txt` file in the **same directory** as the HTML page (e.g. `index.version.txt` for `index.html`), containing only the initial build-version string (e.g. `01.00w`)
 4. **Update the polling URL in the template** — ensure the JS version-file URL derivation matches the HTML filename (the template defaults to deriving it from the page's own filename)
 5. **Create `sounds/` directory** — copy the `sounds/` folder (containing `Website_Ready_Voice_1.mp3`) into the new page's directory so the splash sound works
@@ -69,14 +69,14 @@ When creating a **new** HTML embedding page, follow every step below:
 
 ### Directory Structure (per embedding page)
 ```
-live-site/
+live-site-pages/
 ├── <page-name>/
 │   ├── index.html               # The embedding page (from template)
 │   ├── index.version.txt        # Tracks index.html build-version (e.g. "01.00w")
 │   └── sounds/
 │       └── Website_Ready_Voice_1.mp3
 ```
-For pages that live directly in `live-site/` (not in a subdirectory), the version file and `sounds/` folder sit alongside the HTML file (e.g. `live-site/index.html` + `live-site/index.version.txt`).
+For pages that live directly in `live-site-pages/` (not in a subdirectory), the version file and `sounds/` folder sit alongside the HTML file (e.g. `live-site-pages/index.html` + `live-site-pages/index.version.txt`).
 
 ## Commit Message Naming
 - **Every commit message MUST start with the version number(s) being updated**
