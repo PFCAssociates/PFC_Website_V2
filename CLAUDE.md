@@ -33,7 +33,7 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 4. **Template version freeze** — never bump `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` — its version must always stay at `01.00w`
 5. **STATUS.md** — if any version was bumped, update the matching version in `repository-information/STATUS.md`. **Skip if Template Repo Guard applies**
 6. **ARCHITECTURE.md** — if any version was bumped or the project structure changed, update the diagram in `repository-information/ARCHITECTURE.md`
-7. **CHANGELOG.md** — every user-facing change must have an entry under `## [Unreleased]` in `repository-information/CHANGELOG.md`. **Skip if Template Repo Guard applies**
+7. **CHANGELOG.md** — every user-facing change must have an entry under `## [Unreleased]` in `repository-information/CHANGELOG.md`. Each entry must include an EST timestamp down to the second (format: `` `YYYY-MM-DD HH:MM:SS EST` — Description``). The `[Unreleased]` section header must also show the date/time of the most recent entry. **Skip if Template Repo Guard applies (see above)**
 8. **README.md structure tree** — if files or directories were added, moved, or deleted, update the ASCII tree in `README.md`
 9. **Commit message format** — if versions were bumped, the commit message must start with the version prefix(es): `v{VERSION}` for `.gs`, `v{BUILD_VERSION}` for HTML (e.g. `v01.14g v01.02w Fix bug`)
 10. **Developer branding** — any newly created file must have `Developed by: ShadowAISolutions` as the last line (using the appropriate comment syntax for the file type)
@@ -67,6 +67,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
   2. Deletes the claude branch
   3. Deploys to GitHub Pages
 - The "Create a pull request" message in push output is just GitHub boilerplate — ignore it, the workflow handles merging automatically
+- **Batch commits before pushing** — do NOT push multiple times in rapid succession to the same `claude/*` branch. The workflow uses a shared concurrency group (`"pages"`) with `cancel-in-progress: false`, so each push queues a separate workflow run. If an earlier run merges and deletes the branch, subsequent queued runs fail with exit code 128 because the branch no longer exists. Instead, make all your commits locally first, then push once
 
 ## Version Bumping
 *Rule: see Pre-Commit Checklist item #1. Reference details below.*
