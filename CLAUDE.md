@@ -52,7 +52,7 @@ This triggers the auto-merge workflow, which merges into `main` and deploys to G
 ---
 
 ## Template Repo Guard
-> When `YOUR_REPO_NAME` is `autoupdatehtmltemplate` (i.e. this is the template repo itself, not a fork/clone):
+> When the actual repo name (from `git remote -v`) is `autoupdatehtmltemplate` (i.e. this is the template repo itself, not a fork/clone):
 > - **Session Start Checklist template drift checks are skipped** — the "Template repo short-circuit" in the Always Run section skips the entire numbered checklist. The "Always Run" section (branch hygiene and deployment flow) still applies every session
 > - **All version bumps are skipped** — Pre-Commit Checklist items #1 (`.gs` version bump), #2 (HTML build-version), #3 (version.txt sync), #5 (STATUS.md), **#7 (CHANGELOG.md)**, and #9 (version prefix in commit message) are all skipped unless the user explicitly requests them. **DO NOT add CHANGELOG entries on the template repo** — the CHANGELOG must stay clean with `*(No changes yet)*` so that forks start with a blank history
 > - **GitHub Pages deployment is skipped** — the workflow's `deploy` job checks `github.event.repository.name != 'autoupdatehtmltemplate'` and won't run on the template repo
@@ -103,7 +103,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
 | `YOUR_PROJECT_TITLE` | `YourProjectTitle` | `<title>` tag in `live-site-pages/index.html` and `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` |
 | `YOUR_ORG_NAME` | `YourOrgName` | README (live site link), CITATION.cff (repository URL, site URL), SUPPORT (issue links), SECURITY (advisory link), STATUS (live URL), ARCHITECTURE (diagram URL), issue template config (URLs), workflow file |
 | `COMPANY_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | Available for use in pages that need the company logo |
-| `YOUR_REPO_NAME` | `autoupdatehtmltemplate` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
+| `YOUR_REPO_NAME` | `YourRepoName` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
 | `DEVELOPER_NAME` | `ShadowAISolutions` | LICENSE (copyright), README ("Developed by:" footer), CITATION.cff (author name), "Developed by:" footers (all files including `index.html`, template HTML, workflow, issue templates, YAML, Markdown), FUNDING.yml (sponsor handle), GOVERNANCE (ownership), CONTRIBUTING (convention text), PR template (checklist + footer) |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
 
