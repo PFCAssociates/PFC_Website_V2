@@ -5,7 +5,7 @@ abstract: "A GitHub Pages deployment framework with automatic version polling, a
 authors:
   - name: "ShadowAISolutions"
 type: software
-license: "MIT"
+license: "All Rights Reserved"
 repository-code: "https://github.com/ShadowAISolutions/demorepo4"
 url: "https://ShadowAISolutions.github.io/demorepo4"
 # Developed by: ShadowAISolutions
