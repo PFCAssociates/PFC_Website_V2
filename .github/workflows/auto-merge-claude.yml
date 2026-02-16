@@ -133,13 +133,32 @@ jobs:
         run: |
           git push origin --delete ${{ github.ref_name }} || echo "Branch already deleted"
 
+  check-template:
+    runs-on: ubuntu-latest
+    outputs:
+      is-template: ${{ steps.check.outputs.is-template }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: CLAUDE.md
+          sparse-checkout-cone-mode: false
+      - name: Check IS_TEMPLATE_REPO in CLAUDE.md
+        id: check
+        run: |
+          if grep -qP '^\| `IS_TEMPLATE_REPO` \| `Yes`' CLAUDE.md 2>/dev/null; then
+            echo "is-template=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is-template=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy:
     if: >-
-      github.event.repository.name != 'autoupdatehtmltemplate' &&
+      needs.check-template.outputs.is-template != 'true' &&
       always() &&
       (needs.auto-merge.result == 'skipped' ||
        (needs.auto-merge.result == 'success' && needs.auto-merge.outputs.pages-changed == 'true'))
-    needs: auto-merge
+    needs: [auto-merge, check-template]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
