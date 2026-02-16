@@ -1,5 +1,14 @@
 # Claude Code Instructions
 
+## Chat Bookends (MANDATORY)
+- **First output**: the very first line written to chat in every session must be exactly: `⚡⚡START OF CODING⚡⚡`
+- **Last output**: the very last line written to chat when all work is complete must be exactly: `✅✅CODING COMPLETE✅✅`
+- These bookend lines are standalone — do not combine them with other text on the same line
+
+---
+> **--- END OF CHAT BOOKENDS ---**
+---
+
 ## Session Start Checklist (MANDATORY — RUN FIRST)
 > **MANDATORY FIRST ACTION — DO NOT SKIP**
 > Complete ALL checks below and commit any fixes BEFORE reading or acting on the user's request.
