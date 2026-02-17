@@ -1,8 +1,9 @@
 # Claude Code Instructions
 
 ## Chat Bookends (MANDATORY — EVERY PROMPT)
-- **First output — coding plan**: for every user prompt that will involve changes, the very first line written to chat must be `🚩🚩CODING PLAN🚩🚩` on its own line, followed by a brief bullet-point list of what will be done in this response, then a **blank line** followed by `⚡⚡CODING START⚡⚡` on its own line to signal work is beginning. The blank line is required to break out of the bullet list context so CODING START renders left-aligned. Keep the plan concise — one bullet per distinct action (e.g. "Edit CLAUDE.md to add coding plan rule", "Update README.md timestamp"). This is for transparency, not approval — do NOT wait for user confirmation before proceeding. If the response is purely informational with no changes to make, skip the plan and open with `⚡⚡CODING START⚡⚡` directly
+- **First output — coding plan**: for every user prompt that will involve changes, the very first line written to chat must be `🚩🚩CODING PLAN🚩🚩` on its own line, followed by a brief bullet-point list of what will be done in this response, then a **blank line** followed by `⚡⚡CODING START⚡⚡` on its own line to signal work is beginning. The blank line is required to break out of the bullet list context so CODING START renders left-aligned. Keep the plan concise — one bullet per distinct action (e.g. "Edit CLAUDE.md to add coding plan rule", "Update README.md timestamp"). This is for transparency, not approval — do NOT wait for user confirmation before proceeding. If the response is purely informational with no changes to make, skip the plan and open with `⚡⚡CODING START⚡⚡` directly. **CODING PLAN and CODING START appear exactly once per response** — never repeat them mid-response. Use `🔄🔄NEXT PHASE🔄🔄` instead (see below)
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK FEEDBACK⚓⚓`, then `⚡⚡CODING START⚡⚡`
+- **Mid-response phase marker**: when work within a single response naturally divides into multiple distinct sub-tasks or phases (e.g. "Edit 1" then "Edit 1a: fix related issue"), output `🔄🔄NEXT PHASE🔄🔄` on its own line followed by a brief description of the new phase. **Never repeat** `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡` within the same response — those appear exactly once (at the very top). The mid-response marker keeps the top/bottom boundaries of each prompt/response turn unambiguous while still signaling transitions between sub-tasks
 - **Checklist running**: output `⚠️⚠️CHECKLIST RUNNING⚠️⚠️` on its own line before executing any mandatory checklist (Session Start, Pre-Commit, Pre-Push), followed by the checklist name (e.g. `Session Start Checklist`). This separates checklist overhead from the user's actual task. Output once per checklist invocation
 - **Researching**: output `🔍🔍RESEARCHING🔍🔍` on its own line when entering a research/exploration phase — reading files, searching the codebase, or understanding context before making changes. Skip if going straight to changes without research
 - **Verifying**: output `🧪🧪VERIFYING🧪🧪` on its own line when entering a verification phase — running git hook checks, confirming no stale references, validating edits post-change. Separates "doing the work" from "checking the work"
@@ -24,6 +25,7 @@
 |---------|------|----------|
 | `🚩🚩CODING PLAN🚩🚩` | Response will make changes (code edits, commits, file modifications) | Very first line of response (skip if purely informational) |
 | `⚡⚡CODING START⚡⚡` | Work is beginning | After coding plan bullets (or first line if no plan) |
+| `🔄🔄NEXT PHASE🔄🔄` | Work pivots to a new sub-task within the same response | During work, between phases (never repeats CODING PLAN/CODING START) |
 | `⚓⚓HOOK FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING PLAN as opener) |
 | `⚠️⚠️CHECKLIST RUNNING⚠️⚠️` | A mandatory checklist is executing (Session Start, Pre-Commit, Pre-Push) | Before the checklist name, during work |
 | `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase before making changes | During work, before edits begin (skip if going straight to changes) |
@@ -63,6 +65,39 @@
 📝📝SUMMARY OF CHANGES📝📝
   - Updated X in `file.md` (edited)
   - Created `new-file.js` (created)
+✅✅CODING COMPLETE✅✅
+```
+
+**Multi-phase flow (sub-tasks within one response):**
+```
+🚩🚩CODING PLAN🚩🚩
+  - Update rule text in CLAUDE.md
+  - Fix related issue discovered during edit
+  - Update README timestamp
+
+⚡⚡CODING START⚡⚡
+🔍🔍RESEARCHING🔍🔍
+  ... reading files ...
+  ... applying Edit 1 ...
+
+🔄🔄NEXT PHASE🔄🔄
+  Fix related issue discovered during Edit 1
+  ... applying Edit 1a ...
+
+⚠️⚠️CHECKLIST RUNNING⚠️⚠️
+  Pre-Commit Checklist
+  ... checklist items ...
+🕵🕵AGENTS USED🕵🕵
+  Agent 0 (Main) — applied changes, ran checklists
+📁📁FILES CHANGED📁📁
+  `CLAUDE.md` (edited)
+  `README.md` (edited)
+🔗🔗COMMIT LOG🔗🔗
+  abc1234 — Update rules and fix related issue
+📝📝SUMMARY OF CHANGES📝📝
+  - Updated rule text in `CLAUDE.md`
+  - Fixed related issue in `CLAUDE.md`
+  - Updated timestamp in `README.md`
 ✅✅CODING COMPLETE✅✅
 ```
 
