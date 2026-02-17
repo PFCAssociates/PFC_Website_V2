@@ -421,6 +421,48 @@ When a new embedding page is created (see New Embedding Page Setup Checklist), a
 > **--- END OF EXECUTION STYLE ---**
 ---
 
+## Agent Attribution
+When subagents (Explore, Plan, Bash, etc.) are spawned via the Task tool, their contributions must be visibly attributed in the chat output so the user can see which agent produced what.
+
+### Naming convention
+- **Agent 0** — the main orchestrator (Claude itself, the one the user is talking to). Always present
+- **Agent 1, Agent 2, ...** — subagents, numbered in the order they are first spawned within the session. The number persists if the same agent is resumed (e.g. Agent 1 remains Agent 1 even if resumed later)
+- Format: `Agent N (type)` — e.g. `Agent 1 (Explore)`, `Agent 2 (Plan)`, `Agent 3 (Bash)`
+
+### When to attribute
+- **After a subagent returns**: write a brief inline attribution before summarizing its results. Example: `Agent 1 (Explore) found the relevant files...` or `Agent 2 (Plan) designed the following approach...`
+- **When incorporating subagent output into decisions**: note which agent's findings informed the decision. Example: `Based on Agent 1 (Explore)'s search, the version node is on line 36`
+- **In the SUMMARY OF CHANGES**: if a subagent contributed materially to the response, mention it. Example: `- Agent 2 (Plan) designed the implementation approach`
+
+### What NOT to do
+- Do not change the prompts sent to subagents — this is purely an output/display convention
+- Do not attribute routine tool calls (Read, Edit, Grep, Glob) — only Task-spawned subagents get numbered
+- Do not add attribution noise for trivial contributions — if an Explore agent found nothing useful, no need to mention it
+
+### Example
+```
+⚡⚡CODING START⚡⚡
+📋📋EXECUTION PLAN📋📋
+  - Explore the codebase for auth patterns
+  - Design the implementation
+  - Apply changes
+
+Agent 1 (Explore) searched for existing auth patterns and found...
+Agent 2 (Plan) designed the following approach based on Agent 1's findings...
+
+Agent 0 (Main) applying the changes now...
+  ... work ...
+
+📝📝SUMMARY OF CHANGES📝📝
+  - Added auth middleware (designed by Agent 2 (Plan))
+  - Updated README timestamp
+✅✅CODING COMPLETE✅✅
+```
+
+---
+> **--- END OF AGENT ATTRIBUTION ---**
+---
+
 ## AudioContext & Browser Autoplay Policy
 - **AudioContext starts as `'suspended'`** on every page load — browsers require a user gesture (click/touch) before allowing audio playback
 - **`resume()` without a gesture** generally stays pending or silently fails. It does NOT reject — the promise just never resolves, which causes dangling `.then()` callbacks that fire unexpectedly when the user eventually clicks
