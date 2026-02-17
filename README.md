@@ -2,7 +2,7 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-17 12:14:06 PM EST`
+Last updated: `2026-02-17 12:21:28 PM EST`
 
 You are currently using the **autoupdatehtmltemplate** developed by **ShadowAISolutions**<br>
 Update your code and claude will update the live site link here
@@ -83,6 +83,7 @@ autoupdatehtmltemplate/
 ├── repository-information/
 │   ├── ARCHITECTURE.md         # System diagram (Mermaid)
 │   ├── CHANGELOG.md            # Version history
+│   ├── CODING-GUIDELINES.md    # Domain-specific coding knowledge
 │   ├── GOVERNANCE.md           # Project governance
 │   ├── IMPROVEMENTS.md         # Potential improvements
 │   ├── STATUS.md               # Project status dashboard
