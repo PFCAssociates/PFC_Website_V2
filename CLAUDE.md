@@ -441,15 +441,13 @@ When subagents (Explore, Plan, Bash, etc.) are spawned via the Task tool, their 
 - **Agent 1, Agent 2, ...** — subagents, numbered in the order they are first spawned within the session. The number persists if the same agent is resumed (e.g. Agent 1 remains Agent 1 even if resumed later)
 - Format: `Agent N (type)` — e.g. `Agent 1 (Explore)`, `Agent 2 (Plan)`, `Agent 3 (Bash)`
 
-### When to attribute
-- **After a subagent returns**: write a brief inline attribution before summarizing its results. Example: `Agent 1 (Explore) found the relevant files...` or `Agent 2 (Plan) designed the following approach...`
-- **When incorporating subagent output into decisions**: note which agent's findings informed the decision. Example: `Based on Agent 1 (Explore)'s search, the version node is on line 36`
-- **In the SUMMARY OF CHANGES**: if a subagent contributed materially to the response, mention it. Example: `- Agent 2 (Plan) designed the implementation approach`
-
-### What NOT to do
+### Inline prefix tagging
+- **Agent 0 (Main) is never prefixed** — it's the default. All untagged output is understood to come from Agent 0
+- **Subagent output gets prefixed** with `[Agent N (Type)]` at the start of any line that comes from or summarizes a subagent's contribution. Examples: `[Agent 1 (Explore)] Found auth middleware in src/middleware/...` or `[Agent 2 (Plan)] Recommends adding a validation layer before...`
+- This applies to inline commentary during work, SUMMARY OF CHANGES bullets, and any other output where a subagent's contribution is being relayed
 - Do not change the prompts sent to subagents — this is purely an output/display convention
-- Do not attribute routine tool calls (Read, Edit, Grep, Glob) — only Task-spawned subagents get numbered
-- Do not add attribution noise for trivial contributions — if an Explore agent found nothing useful, no need to mention it
+- Do not prefix routine tool calls (Read, Edit, Grep, Glob) — only Task-spawned subagents get prefixed
+- If a subagent found nothing useful, no need to mention it
 
 ### Example
 ```
@@ -460,14 +458,14 @@ When subagents (Explore, Plan, Bash, etc.) are spawned via the Task tool, their 
 
 ⚡⚡CODING START⚡⚡
 
-Agent 1 (Explore) searched for existing auth patterns and found...
-Agent 2 (Plan) designed the following approach based on Agent 1's findings...
+[Agent 1 (Explore)] Found existing auth patterns in src/middleware/auth.js...
+[Agent 2 (Plan)] Designed the following approach based on Agent 1's findings...
 
-Agent 0 (Main) applying the changes now...
+Applying the changes now...
   ... work ...
 
 📝📝SUMMARY OF CHANGES📝📝
-  - Added auth middleware in `src/middleware/auth.js` (designed by Agent 2 (Plan))
+  - Added auth middleware in `src/middleware/auth.js` ([Agent 2 (Plan)] designed the approach)
   - Updated timestamp in `README.md`
 🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — applied changes, committed, pushed
