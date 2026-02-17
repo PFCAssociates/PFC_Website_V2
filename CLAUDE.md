@@ -21,7 +21,7 @@
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING_COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
-- **Timestamps on bookends** — every bookend marker must include a real EST date+timestamp on the same line, placed after the marker text in square brackets. Format: `BOOKEND [YYYY-MM-DD HH:MM:SS AM/PM EST]`. **You must run `TZ=America/New_York date '+%Y-%m-%d %I:%M:%S %p EST'` via the Bash tool and get the result BEFORE writing the bookend line** — you have no internal clock, so any timestamp written without calling `date` first is fabricated. Do not guess, estimate, or anchor on times mentioned in the user's message. The small delay before text appears is an acceptable tradeoff for accuracy. For the opening pair (CODING_PLAN + CODING_START), a single `date` call is sufficient — run it once before any text output and reuse the same timestamp for both markers. For subsequent bookends mid-response, call `date` inline before writing the marker. End-of-response section headers (AGENTS_USED, FILES_CHANGED, COMMIT_LOG, WORTH_NOTING, SUMMARY) do not get timestamps. **CODING_COMPLETE's `date` call must happen before AGENTS_USED** — fetch the timestamp, then write the entire end-of-response block (AGENTS_USED → FILES_CHANGED → COMMIT_LOG → WORTH_NOTING → SUMMARY → CODING_COMPLETE) as one uninterrupted text output using the pre-fetched timestamp
+- **Timestamps on bookends** — every bookend marker must include a real EST timestamp on the same line, placed after the marker text in square brackets. **Three bookends get date+time** (format: `[YYYY-MM-DD HH:MM:SS AM/PM EST]`): CODING_PLAN, CODING_START, and CODING_COMPLETE. **All other bookends get time-only** (format: `[HH:MM:SS AM/PM EST]`). **You must run `date` via the Bash tool and get the result BEFORE writing the bookend line** — you have no internal clock, so any timestamp written without calling `date` first is fabricated. Use `TZ=America/New_York date '+%Y-%m-%d %I:%M:%S %p EST'` for the date+time bookends and `TZ=America/New_York date '+%I:%M:%S %p EST'` for time-only bookends. Do not guess, estimate, or anchor on times mentioned in the user's message. The small delay before text appears is an acceptable tradeoff for accuracy. For the opening pair (CODING_PLAN + CODING_START), a single `date` call is sufficient — run it once before any text output and reuse the same timestamp for both markers. For subsequent bookends mid-response, call `date` inline before writing the marker. End-of-response section headers (AGENTS_USED, FILES_CHANGED, COMMIT_LOG, WORTH_NOTING, SUMMARY) do not get timestamps. **CODING_COMPLETE's `date` call must happen before AGENTS_USED** — fetch the timestamp, then write the entire end-of-response block (AGENTS_USED → FILES_CHANGED → COMMIT_LOG → WORTH_NOTING → SUMMARY → CODING_COMPLETE) as one uninterrupted text output using the pre-fetched timestamp
 - **Duration annotations** — a `⏱️` annotation appears between **every** consecutive pair of bookends (and before the end-of-response block). No exceptions — if two bookends appear in sequence, there must be a `⏱️` line between them. Format: `⏱️ Xs` (or `Xm Ys` for durations over 60 seconds). The duration is calculated by subtracting the previous bookend's timestamp from the current time. **You must run `date` to get the current time and compute the difference** — never estimate durations mentally. If a phase lasted less than 1 second, write `⏱️ <1s`. **The last working phase always gets a `⏱️`** — its annotation appears immediately before AGENTS_USED (as part of the pre-fetched end-of-response block). This includes the gap between CODING_START and the next bookend, the gap between AWAITING_HOOK and HOOK_FEEDBACK, and every other transition
 
 ### Bookend Summary
@@ -30,14 +30,14 @@
 |---------|------|----------|-----------|----------|
 | `🚩🚩CODING_PLAN🚩🚩 [YYYY-MM-DD HH:MM:SS AM EST]` | Response will make changes | Very first line of response (skip if purely informational) | Required | — |
 | `⚡⚡CODING_START⚡⚡ [YYYY-MM-DD HH:MM:SS AM EST]` | Work is beginning | After coding plan bullets (or first line if no plan) | Required | `⏱️` before next bookend |
-| `📋📋PLAN_APPROVED📋📋 [YYYY-MM-DD HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) | Required | — |
-| `✔️✔️CHECKLIST✔️✔️ [YYYY-MM-DD HH:MM:SS AM EST]` | A mandatory checklist is executing | Before the checklist name, during work | Required | `⏱️` before next bookend |
-| `🔍🔍RESEARCHING🔍🔍 [YYYY-MM-DD HH:MM:SS AM EST]` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) | Required | `⏱️` before next bookend |
-| `🔄🔄NEXT_PHASE🔄🔄 [YYYY-MM-DD HH:MM:SS AM EST]` | Work pivots to a new sub-task | During work, between phases (never repeats CODING_PLAN/CODING_START) | Required | `⏱️` before next bookend |
-| `🚧🚧BLOCKED🚧🚧 [YYYY-MM-DD HH:MM:SS AM EST]` | An obstacle was hit | During work, when the problem is encountered | Required | `⏱️` before next bookend |
-| `🧪🧪VERIFYING🧪🧪 [YYYY-MM-DD HH:MM:SS AM EST]` | Entering a verification phase | During work, after edits are applied | Required | `⏱️` before next bookend |
-| `🐟🐟AWAITING_HOOK🐟🐟 [YYYY-MM-DD HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire | Required | `⏱️` before HOOK_FEEDBACK |
-| `⚓⚓HOOK_FEEDBACK⚓⚓ [YYYY-MM-DD HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) | Required | `⏱️` before end-of-response block |
+| `📋📋PLAN_APPROVED📋📋 [HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) | Required | — |
+| `✔️✔️CHECKLIST✔️✔️ [HH:MM:SS AM EST]` | A mandatory checklist is executing | Before the checklist name, during work | Required | `⏱️` before next bookend |
+| `🔍🔍RESEARCHING🔍🔍 [HH:MM:SS AM EST]` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) | Required | `⏱️` before next bookend |
+| `🔄🔄NEXT_PHASE🔄🔄 [HH:MM:SS AM EST]` | Work pivots to a new sub-task | During work, between phases (never repeats CODING_PLAN/CODING_START) | Required | `⏱️` before next bookend |
+| `🚧🚧BLOCKED🚧🚧 [HH:MM:SS AM EST]` | An obstacle was hit | During work, when the problem is encountered | Required | `⏱️` before next bookend |
+| `🧪🧪VERIFYING🧪🧪 [HH:MM:SS AM EST]` | Entering a verification phase | During work, after edits are applied | Required | `⏱️` before next bookend |
+| `🐟🐟AWAITING_HOOK🐟🐟 [HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire | Required | `⏱️` before HOOK_FEEDBACK |
+| `⚓⚓HOOK_FEEDBACK⚓⚓ [HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) | Required | `⏱️` before end-of-response block |
 | `⏱️ Xs` | Phase just ended | Immediately before the next bookend marker | — | Computed |
 | `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` | End-of-response block begins | After last `⏱️`, before AGENTS_USED | — | — |
 | `🕵🕵AGENTS_USED🕵🕵` | Response performed work | First end-of-response section | — | — |
@@ -56,15 +56,15 @@
 
 ⚡⚡CODING_START⚡⚡ [2026-01-15 01:15:01 AM EST]
   ⏱️ <1s
-🔍🔍RESEARCHING🔍🔍 [2026-01-15 01:15:01 AM EST]
+🔍🔍RESEARCHING🔍🔍 [01:15:01 AM EST]
   ... reading files, searching codebase ...
   ... applying changes ...
   ⏱️ 1m 29s
-✔️✔️CHECKLIST✔️✔️ [2026-01-15 01:16:30 AM EST]
+✔️✔️CHECKLIST✔️✔️ [01:16:30 AM EST]
   Pre-Commit Checklist
   ... checklist items ...
   ⏱️ 30s
-🧪🧪VERIFYING🧪🧪 [2026-01-15 01:17:00 AM EST]
+🧪🧪VERIFYING🧪🧪 [01:17:00 AM EST]
   ... validating edits, running hook checks ...
   ⏱️ 15s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -89,10 +89,10 @@
 ⚡⚡CODING_START⚡⚡ [2026-01-15 01:15:01 AM EST]
   ... work (commit without push) ...
   ⏱️ 1m 44s
-🐟🐟AWAITING_HOOK🐟🐟 [2026-01-15 01:16:45 AM EST]
+🐟🐟AWAITING_HOOK🐟🐟 [01:16:45 AM EST]
   ← hook fires →
   ⏱️ 5s
-⚓⚓HOOK_FEEDBACK⚓⚓ [2026-01-15 01:16:50 AM EST]
+⚓⚓HOOK_FEEDBACK⚓⚓ [01:16:50 AM EST]
   ... push ...
   ⏱️ 20s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
