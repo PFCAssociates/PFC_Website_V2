@@ -4,6 +4,9 @@
 - **First output — coding plan**: for every user prompt that will involve changes, the very first line written to chat must be `🚩🚩CODING PLAN🚩🚩` on its own line, followed by a brief bullet-point list of what will be done in this response, then a **blank line** followed by `⚡⚡CODING START⚡⚡` on its own line to signal work is beginning. The blank line is required to break out of the bullet list context so CODING START renders left-aligned. Keep the plan concise — one bullet per distinct action (e.g. "Edit CLAUDE.md to add coding plan rule", "Update README.md timestamp"). This is for transparency, not approval — do NOT wait for user confirmation before proceeding. If the response is purely informational with no changes to make, skip the plan and open with `⚡⚡CODING START⚡⚡` directly. **CODING PLAN and CODING START appear exactly once per response** — never repeat them mid-response. Use `🔄🔄NEXT PHASE🔄🔄` instead (see below)
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK FEEDBACK⚓⚓`, then `⚡⚡CODING START⚡⚡`
 - **Mid-response phase marker**: when work within a single response naturally divides into multiple distinct sub-tasks or phases (e.g. "Edit 1" then "Edit 1a: fix related issue"), output `🔄🔄NEXT PHASE🔄🔄` on its own line followed by a brief description of the new phase. **Never repeat** `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡` within the same response — those appear exactly once (at the very top). The mid-response marker keeps the top/bottom boundaries of each prompt/response turn unambiguous while still signaling transitions between sub-tasks
+- **Continuation after user interaction**: when `AskUserQuestion` or `ExitPlanMode` returns mid-response (the user answered a question or approved a plan), the response continues but must **NOT** repeat `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. Instead:
+  - After `AskUserQuestion`: use `🔄🔄NEXT PHASE🔄🔄` with a description incorporating the user's choice (e.g. "User chose option A — proceeding with implementation")
+  - After `ExitPlanMode` (plan approved): output `📋📋PLAN APPROVED📋📋` on its own line, followed by `🚩🚩CODING PLAN🚩🚩` with the execution plan bullets, then `⚡⚡CODING START⚡⚡`. This is the **only** scenario where CODING PLAN/CODING START may appear a second time — because plan approval is a distinct boundary between planning and execution, and the user needs to see the execution plan clearly. The `📋📋PLAN APPROVED📋📋` marker signals that this is a continuation, not a new prompt
 - **Checklist running**: output `⚠️⚠️CHECKLIST RUNNING⚠️⚠️` on its own line before executing any mandatory checklist (Session Start, Pre-Commit, Pre-Push), followed by the checklist name (e.g. `Session Start Checklist`). This separates checklist overhead from the user's actual task. Output once per checklist invocation
 - **Researching**: output `🔍🔍RESEARCHING🔍🔍` on its own line when entering a research/exploration phase — reading files, searching the codebase, or understanding context before making changes. Skip if going straight to changes without research
 - **Verifying**: output `🧪🧪VERIFYING🧪🧪` on its own line when entering a verification phase — running git hook checks, confirming no stale references, validating edits post-change. Separates "doing the work" from "checking the work"
@@ -26,6 +29,7 @@
 | `🚩🚩CODING PLAN🚩🚩` | Response will make changes (code edits, commits, file modifications) | Very first line of response (skip if purely informational) |
 | `⚡⚡CODING START⚡⚡` | Work is beginning | After coding plan bullets (or first line if no plan) |
 | `🔄🔄NEXT PHASE🔄🔄` | Work pivots to a new sub-task within the same response | During work, between phases (never repeats CODING PLAN/CODING START) |
+| `📋📋PLAN APPROVED📋📋` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING PLAN + CODING START (only allowed repeat) |
 | `⚓⚓HOOK FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING PLAN as opener) |
 | `⚠️⚠️CHECKLIST RUNNING⚠️⚠️` | A mandatory checklist is executing (Session Start, Pre-Commit, Pre-Push) | Before the checklist name, during work |
 | `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase before making changes | During work, before edits begin (skip if going straight to changes) |
@@ -98,6 +102,61 @@
   - Updated rule text in `CLAUDE.md`
   - Fixed related issue in `CLAUDE.md`
   - Updated timestamp in `README.md`
+✅✅CODING COMPLETE✅✅
+```
+
+**Plan approval flow (ExitPlanMode continuation):**
+```
+🚩🚩CODING PLAN🚩🚩
+  - Research codebase for auth patterns
+  - Design implementation plan
+
+⚡⚡CODING START⚡⚡
+🔍🔍RESEARCHING🔍🔍
+  ... exploring codebase, writing plan file ...
+  ... calls ExitPlanMode → user approves ...
+📋📋PLAN APPROVED📋📋
+🚩🚩CODING PLAN🚩🚩
+  - Add auth middleware in src/middleware/
+  - Update route handlers
+  - Update README timestamp
+
+⚡⚡CODING START⚡⚡
+  ... executing the approved plan ...
+🕵🕵AGENTS USED🕵🕵
+  Agent 0 (Main) — researched, planned, and executed
+📁📁FILES CHANGED📁📁
+  `src/middleware/auth.js` (created)
+  `README.md` (edited)
+🔗🔗COMMIT LOG🔗🔗
+  abc1234 — Add auth middleware
+📝📝SUMMARY OF CHANGES📝📝
+  - Created auth middleware in `src/middleware/auth.js`
+  - Updated timestamp in `README.md`
+✅✅CODING COMPLETE✅✅
+```
+
+**AskUserQuestion continuation flow:**
+```
+🚩🚩CODING PLAN🚩🚩
+  - Determine user preference for approach
+  - Implement chosen approach
+
+⚡⚡CODING START⚡⚡
+🔍🔍RESEARCHING🔍🔍
+  ... reading codebase to formulate question ...
+  ... calls AskUserQuestion → user answers ...
+🔄🔄NEXT PHASE🔄🔄
+  User chose Option A — proceeding with implementation
+  ... applying changes ...
+🕵🕵AGENTS USED🕵🕵
+  Agent 0 (Main) — researched, asked user, applied changes
+📁📁FILES CHANGED📁📁
+  `config.js` (edited)
+🔗🔗COMMIT LOG🔗🔗
+  def5678 — Update config with user preference
+📝📝SUMMARY OF CHANGES📝📝
+  - Updated configuration in `config.js` per user choice
 ✅✅CODING COMPLETE✅✅
 ```
 
