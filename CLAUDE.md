@@ -21,43 +21,44 @@
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING_COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
+- **Timestamps on bookends** — every bookend marker must include a real EST timestamp on the same line, placed after the marker text in square brackets. Format: `BOOKEND [HH:MM:SS AM/PM EST]`. Run `TZ=America/New_York date '+%I:%M:%S %p EST'` to get the actual current time — never fabricate timestamps. This applies to all bookend markers listed in the summary table below. The timestamp goes on the **same line** as the bookend (this is the one exception to the "standalone" rule — the timestamp is part of the marker, not separate text). For end-of-response section headers (AGENTS_USED, FILES_CHANGED, COMMIT_LOG, WORTH_NOTING, SUMMARY), the timestamp is optional — add it only to SUMMARY (the final one) to mark when the response wrapped up
 
 ### Bookend Summary
 
-| Bookend | When | Position |
-|---------|------|----------|
-| `🚩🚩CODING_PLAN🚩🚩` | Response will make changes | Very first line of response (skip if purely informational) |
-| `⚡⚡CODING_START⚡⚡` | Work is beginning | After coding plan bullets (or first line if no plan) |
-| `📋📋PLAN_APPROVED📋📋` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) |
-| `✔️✔️CHECKLIST✔️✔️` | A mandatory checklist is executing | Before the checklist name, during work |
-| `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) |
-| `🔄🔄NEXT_PHASE🔄🔄` | Work pivots to a new sub-task | During work, between phases (never repeats CODING_PLAN/CODING_START) |
-| `🚧🚧BLOCKED🚧🚧` | An obstacle was hit | During work, when the problem is encountered |
-| `🧪🧪VERIFYING🧪🧪` | Entering a verification phase | During work, after edits are applied |
-| `🐟🐟AWAITING_HOOK🐟🐟` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire |
-| `⚓⚓HOOK_FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) |
-| `🕵🕵AGENTS_USED🕵🕵` | Response performed work | First end-of-response section |
-| `📁📁FILES_CHANGED📁📁` | Files were modified/created/deleted | After AGENTS_USED (skip if no files changed) |
-| `🔗🔗COMMIT_LOG🔗🔗` | Commits were made | After FILES_CHANGED (skip if no commits made) |
-| `🔖🔖WORTH_NOTING🔖🔖` | Something deserves attention | After COMMIT_LOG (skip if nothing worth noting) |
-| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING_COMPLETE |
-| `✅✅CODING_COMPLETE✅✅` | All work done | Always the very last line of response |
+| Bookend | When | Position | Timestamp |
+|---------|------|----------|-----------|
+| `🚩🚩CODING_PLAN🚩🚩 [HH:MM:SS AM EST]` | Response will make changes | Very first line of response (skip if purely informational) | Required |
+| `⚡⚡CODING_START⚡⚡ [HH:MM:SS AM EST]` | Work is beginning | After coding plan bullets (or first line if no plan) | Required |
+| `📋📋PLAN_APPROVED📋📋 [HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) | Required |
+| `✔️✔️CHECKLIST✔️✔️ [HH:MM:SS AM EST]` | A mandatory checklist is executing | Before the checklist name, during work | Required |
+| `🔍🔍RESEARCHING🔍🔍 [HH:MM:SS AM EST]` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) | Required |
+| `🔄🔄NEXT_PHASE🔄🔄 [HH:MM:SS AM EST]` | Work pivots to a new sub-task | During work, between phases (never repeats CODING_PLAN/CODING_START) | Required |
+| `🚧🚧BLOCKED🚧🚧 [HH:MM:SS AM EST]` | An obstacle was hit | During work, when the problem is encountered | Required |
+| `🧪🧪VERIFYING🧪🧪 [HH:MM:SS AM EST]` | Entering a verification phase | During work, after edits are applied | Required |
+| `🐟🐟AWAITING_HOOK🐟🐟 [HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire | Required |
+| `⚓⚓HOOK_FEEDBACK⚓⚓ [HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) | Required |
+| `🕵🕵AGENTS_USED🕵🕵` | Response performed work | First end-of-response section | — |
+| `📁📁FILES_CHANGED📁📁` | Files were modified/created/deleted | After AGENTS_USED (skip if no files changed) | — |
+| `🔗🔗COMMIT_LOG🔗🔗` | Commits were made | After FILES_CHANGED (skip if no commits made) | — |
+| `🔖🔖WORTH_NOTING🔖🔖` | Something deserves attention | After COMMIT_LOG (skip if nothing worth noting) | — |
+| `📝📝SUMMARY📝📝 [HH:MM:SS AM EST]` | Changes were made in the response | Last section before CODING_COMPLETE | Required |
+| `✅✅CODING_COMPLETE✅✅ [HH:MM:SS AM EST]` | All work done | Always the very last line of response | Required |
 
 ### Flow Examples
 
 **Normal flow (no hook):**
 ```
-🚩🚩CODING_PLAN🚩🚩
+🚩🚩CODING_PLAN🚩🚩 [01:15:00 AM EST]
   - brief bullet plan of intended changes
 
-⚡⚡CODING_START⚡⚡
-🔍🔍RESEARCHING🔍🔍
+⚡⚡CODING_START⚡⚡ [01:15:01 AM EST]
+🔍🔍RESEARCHING🔍🔍 [01:15:01 AM EST]
   ... reading files, searching codebase ...
   ... applying changes ...
-✔️✔️CHECKLIST✔️✔️
+✔️✔️CHECKLIST✔️✔️ [01:16:30 AM EST]
   Pre-Commit Checklist
   ... checklist items ...
-🧪🧪VERIFYING🧪🧪
+🧪🧪VERIFYING🧪🧪 [01:17:00 AM EST]
   ... validating edits, running hook checks ...
 🕵🕵AGENTS_USED🕵🕵
   Agent 0 (Main) — applied changes, ran checklists
@@ -66,22 +67,22 @@
   `new-file.js` (created)
 🔗🔗COMMIT_LOG🔗🔗
   abc1234 — Add feature X
-📝📝SUMMARY📝📝
+📝📝SUMMARY📝📝 [01:17:15 AM EST]
   - Updated X in `file.md` (edited)
   - Created `new-file.js` (created)
-✅✅CODING_COMPLETE✅✅
+✅✅CODING_COMPLETE✅✅ [01:17:15 AM EST]
 ```
 
 **Hook anticipated flow:**
 ```
-🚩🚩CODING_PLAN🚩🚩
+🚩🚩CODING_PLAN🚩🚩 [01:15:00 AM EST]
   - brief bullet plan of intended changes
 
-⚡⚡CODING_START⚡⚡
+⚡⚡CODING_START⚡⚡ [01:15:01 AM EST]
   ... work (commit without push) ...
-🐟🐟AWAITING_HOOK🐟🐟
+🐟🐟AWAITING_HOOK🐟🐟 [01:16:45 AM EST]
   ← hook fires →
-⚓⚓HOOK_FEEDBACK⚓⚓
+⚓⚓HOOK_FEEDBACK⚓⚓ [01:16:50 AM EST]
   ... push ...
 🕵🕵AGENTS_USED🕵🕵
   Agent 0 (Main) — applied changes, pushed
@@ -89,10 +90,10 @@
   `file.md` (edited)
 🔗🔗COMMIT_LOG🔗🔗
   abc1234 — Add feature X
-📝📝SUMMARY📝📝
+📝📝SUMMARY📝📝 [01:17:10 AM EST]
   - Updated X in `file.md`
   - Pushed to remote
-✅✅CODING_COMPLETE✅✅
+✅✅CODING_COMPLETE✅✅ [01:17:10 AM EST]
 ```
 
 ### Hook anticipation — bug context
