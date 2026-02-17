@@ -1,60 +1,60 @@
 # Claude Code Instructions
 
 ## Chat Bookends (MANDATORY — EVERY PROMPT)
-- **First output — coding plan**: for every user prompt that will involve changes, the very first line written to chat must be `🚩🚩CODING_PLAN🚩🚩` on its own line, followed by a brief bullet-point list of what will be done in this response, then a **blank line** followed by `⚡⚡CODING_START⚡⚡` on its own line to signal work is beginning. The blank line is required to break out of the bullet list context so CODING_START renders left-aligned. Keep the plan concise — one bullet per distinct action (e.g. "Edit CLAUDE.md to add coding plan rule", "Update README.md timestamp"). This is for transparency, not approval — do NOT wait for user confirmation before proceeding. If the response is purely informational with no changes to make, skip the plan and open with `⚡⚡CODING_START⚡⚡` directly. **CODING_PLAN and CODING_START appear exactly once per response** — never repeat them mid-response. Use `🔄🔄NEXT_PHASE🔄🔄` instead (see below)
-- **Continuation after user interaction**: when `AskUserQuestion` or `ExitPlanMode` returns mid-response (the user answered a question or approved a plan), the response continues but must **NOT** repeat `🚩🚩CODING_PLAN🚩🚩` or `⚡⚡CODING_START⚡⚡`. Instead:
-  - After `AskUserQuestion`: use `🔄🔄NEXT_PHASE🔄🔄` with a description incorporating the user's choice (e.g. "User chose option A — proceeding with implementation")
-  - After `ExitPlanMode` (plan approved): output `📋📋PLAN_APPROVED📋📋` on its own line, followed by `🚩🚩CODING_PLAN🚩🚩` with the execution plan bullets, then `⚡⚡CODING_START⚡⚡`. This is the **only** scenario where CODING_PLAN/CODING_START may appear a second time — because plan approval is a distinct boundary between planning and execution, and the user needs to see the execution plan clearly. The `📋📋PLAN_APPROVED📋📋` marker signals that this is a continuation, not a new prompt
+- **First output — coding plan**: for every user prompt that will involve changes, the very first line written to chat must be `🚩🚩CODING PLAN🚩🚩` on its own line, followed by a brief bullet-point list of what will be done in this response, then a **blank line** followed by `⚡⚡CODING START⚡⚡` on its own line to signal work is beginning. The blank line is required to break out of the bullet list context so CODING START renders left-aligned. Keep the plan concise — one bullet per distinct action (e.g. "Edit CLAUDE.md to add coding plan rule", "Update README.md timestamp"). This is for transparency, not approval — do NOT wait for user confirmation before proceeding. If the response is purely informational with no changes to make, skip the plan and open with `⚡⚡CODING START⚡⚡` directly. **CODING PLAN and CODING START appear exactly once per response** — never repeat them mid-response. Use `🔄🔄NEXT PHASE🔄🔄` instead (see below)
+- **Continuation after user interaction**: when `AskUserQuestion` or `ExitPlanMode` returns mid-response (the user answered a question or approved a plan), the response continues but must **NOT** repeat `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. Instead:
+  - After `AskUserQuestion`: use `🔄🔄NEXT PHASE🔄🔄` with a description incorporating the user's choice (e.g. "User chose option A — proceeding with implementation")
+  - After `ExitPlanMode` (plan approved): output `📋📋PLAN APPROVED📋📋` on its own line, followed by `🚩🚩CODING PLAN🚩🚩` with the execution plan bullets, then `⚡⚡CODING START⚡⚡`. This is the **only** scenario where CODING PLAN/CODING START may appear a second time — because plan approval is a distinct boundary between planning and execution, and the user needs to see the execution plan clearly. The `📋📋PLAN APPROVED📋📋` marker signals that this is a continuation, not a new prompt
 - **Checklist running**: output `✔️✔️CHECKLIST✔️✔️` on its own line before executing any mandatory checklist (Session Start, Pre-Commit, Pre-Push), followed by the checklist name (e.g. `Session Start Checklist`). This separates checklist overhead from the user's actual task. Output once per checklist invocation
 - **Researching**: output `🔍🔍RESEARCHING🔍🔍` on its own line when entering a research/exploration phase — reading files, searching the codebase, or understanding context before making changes. Skip if going straight to changes without research
-- **Mid-response phase marker**: when work within a single response naturally divides into multiple distinct sub-tasks or phases (e.g. "Edit 1" then "Edit 1a: fix related issue"), output `🔄🔄NEXT_PHASE🔄🔄` on its own line followed by a brief description of the new phase. **Never repeat** `🚩🚩CODING_PLAN🚩🚩` or `⚡⚡CODING_START⚡⚡` within the same response — those appear exactly once (at the very top). The mid-response marker keeps the top/bottom boundaries of each prompt/response turn unambiguous while still signaling transitions between sub-tasks
+- **Mid-response phase marker**: when work within a single response naturally divides into multiple distinct sub-tasks or phases (e.g. "Edit 1" then "Edit 1a: fix related issue"), output `🔄🔄NEXT PHASE🔄🔄` on its own line followed by a brief description of the new phase. **Never repeat** `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡` within the same response — those appear exactly once (at the very top). The mid-response marker keeps the top/bottom boundaries of each prompt/response turn unambiguous while still signaling transitions between sub-tasks
 - **Blocked**: output `🚧🚧BLOCKED🚧🚧` on its own line when an obstacle is hit (permission denied, merge conflict, ambiguous requirement, failed push, hook check failure). Follow with a brief description of the blocker. This makes problems immediately visible rather than buried in tool output
 - **Verifying**: output `🧪🧪VERIFYING🧪🧪` on its own line when entering a verification phase — running git hook checks, confirming no stale references, validating edits post-change. Separates "doing the work" from "checking the work"
-- **Hook anticipation**: before writing `✅✅CODING_COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING_COMPLETE✅✅` and instead write `🐟🐟AWAITING_HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING_COMPLETE✅✅` should close the hook feedback response instead. **Do not forget the `⏱️` duration annotation** — AWAITING_HOOK is a bookend like any other, so the previous phase's `⏱️` must appear immediately before it. After the hook anticipation git commands complete, call `date`, compute the duration since the previous bookend's timestamp, write the `⏱️` line, then write AWAITING_HOOK
-- **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK_FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING_PLAN🚩🚩` or `⚡⚡CODING_START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK_FEEDBACK⚓⚓`, then `⚡⚡CODING_START⚡⚡`
-- **End-of-response sections**: after all work is done, output the following sections in this exact order. Skip the entire block only if the response was purely informational with no changes made. **The entire block — from the `━━━` divider through CODING_COMPLETE — must be written as one continuous text output with no tool calls in between.** To achieve this, run the `date` command for CODING_COMPLETE's timestamp **before** starting the block, then output: the last phase's `⏱️` duration, a `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` divider on its own line (Unicode heavy horizontal line — visually separating work phases from the end-of-response block), then AGENTS_USED through CODING_COMPLETE using the pre-fetched timestamp:
-  - **Agents used**: output `🕵🕵AGENTS_USED🕵🕵` followed by a list of all agents that contributed to this response — including Agent 0 (Main). Format: `Agent N (Type) — brief description of contribution`. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
-  - **Files changed**: output `📁📁FILES_CHANGED📁📁` followed by a list of every file modified in the response, each tagged with the type of change: `(edited)`, `(created)`, or `(deleted)`. This gives a clean at-a-glance file manifest. Skip if no files were changed in the response
-  - **Commit log**: output `🔗🔗COMMIT_LOG🔗🔗` followed by a list of every commit made in the response, formatted as `SHORT_SHA — commit message`. Skip if no commits were made in the response
-  - **Worth noting**: output `🔖🔖WORTH_NOTING🔖🔖` followed by a list of anything that deserves attention but isn't a blocker (e.g. "Push-once already used — did not push again", "Template repo guard skipped version bumps", "Pre-commit hook modified files — re-staged"). Skip if there are nothing worth noting
-  - **Summary of changes**: output `📝📝SUMMARY📝📝` on its own line followed by a concise bullet-point summary of all changes applied in the current response. Each bullet must indicate which file(s) were edited (e.g. "Updated build-version in `live-site-pages/index.html`"). If a bullet describes a non-file action (e.g. "Pushed to remote"), no file path is needed. This is the last section before `✅✅CODING_COMPLETE✅✅`
-- **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING_COMPLETE✅✅`
+- **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead. **Do not forget the `⏱️` duration annotation** — AWAITING HOOK is a bookend like any other, so the previous phase's `⏱️` must appear immediately before it. After the hook anticipation git commands complete, call `date`, compute the duration since the previous bookend's timestamp, write the `⏱️` line, then write AWAITING HOOK
+- **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK FEEDBACK⚓⚓`, then `⚡⚡CODING START⚡⚡`
+- **End-of-response sections**: after all work is done, output the following sections in this exact order. Skip the entire block only if the response was purely informational with no changes made. **The entire block — from the `━━━` divider through CODING COMPLETE — must be written as one continuous text output with no tool calls in between.** To achieve this, run the `date` command for CODING COMPLETE's timestamp **before** starting the block, then output: the last phase's `⏱️` duration, a `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` divider on its own line (Unicode heavy horizontal line — visually separating work phases from the end-of-response block), then AGENTS USED through CODING COMPLETE using the pre-fetched timestamp:
+  - **Agents used**: output `🕵🕵AGENTS USED🕵🕵` followed by a list of all agents that contributed to this response — including Agent 0 (Main). Format: `Agent N (Type) — brief description of contribution`. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
+  - **Files changed**: output `📁📁FILES CHANGED📁📁` followed by a list of every file modified in the response, each tagged with the type of change: `(edited)`, `(created)`, or `(deleted)`. This gives a clean at-a-glance file manifest. Skip if no files were changed in the response
+  - **Commit log**: output `🔗🔗COMMIT LOG🔗🔗` followed by a list of every commit made in the response, formatted as `SHORT_SHA — commit message`. Skip if no commits were made in the response
+  - **Worth noting**: output `🔖🔖WORTH NOTING🔖🔖` followed by a list of anything that deserves attention but isn't a blocker (e.g. "Push-once already used — did not push again", "Template repo guard skipped version bumps", "Pre-commit hook modified files — re-staged"). Skip if there are nothing worth noting
+  - **Summary of changes**: output `📝📝SUMMARY📝📝` on its own line followed by a concise bullet-point summary of all changes applied in the current response. Each bullet must indicate which file(s) were edited (e.g. "Updated build-version in `live-site-pages/index.html`"). If a bullet describes a non-file action (e.g. "Pushed to remote"), no file path is needed. This is the last section before `✅✅CODING COMPLETE✅✅`
+- **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
-- **Timestamps on bookends** — every bookend marker must include a real EST timestamp on the same line, placed after the marker text in square brackets. **Three bookends get time+date** (format: `[HH:MM:SS AM/PM EST YYYY-MM-DD]`): CODING_PLAN, CODING_START, and CODING_COMPLETE. **All other bookends get time-only** (format: `[HH:MM:SS AM/PM EST]`). **You must run `date` via the Bash tool and get the result BEFORE writing the bookend line** — you have no internal clock, so any timestamp written without calling `date` first is fabricated. Use `TZ=America/New_York date '+%I:%M:%S %p EST %Y-%m-%d'` for the time+date bookends and `TZ=America/New_York date '+%I:%M:%S %p EST'` for time-only bookends. Do not guess, estimate, or anchor on times mentioned in the user's message. The small delay before text appears is an acceptable tradeoff for accuracy. For the opening pair (CODING_PLAN + CODING_START), a single `date` call is sufficient — run it once before any text output and reuse the same timestamp for both markers. For subsequent bookends mid-response, call `date` inline before writing the marker. End-of-response section headers (AGENTS_USED, FILES_CHANGED, COMMIT_LOG, WORTH_NOTING, SUMMARY) do not get timestamps. **CODING_COMPLETE's `date` call must happen before AGENTS_USED** — fetch the timestamp, then write the entire end-of-response block (AGENTS_USED → FILES_CHANGED → COMMIT_LOG → WORTH_NOTING → SUMMARY → CODING_COMPLETE) as one uninterrupted text output using the pre-fetched timestamp
-- **Duration annotations** — a `⏱️` annotation appears between **every** consecutive pair of bookends (and before the end-of-response block). No exceptions — if two bookends appear in sequence, there must be a `⏱️` line between them. Format: `⏱️ Xs` (or `Xm Ys` for durations over 60 seconds). The duration is calculated by subtracting the previous bookend's timestamp from the current time. **You must run `date` to get the current time and compute the difference** — never estimate durations mentally. If a phase lasted less than 1 second, write `⏱️ <1s`. **The last working phase always gets a `⏱️`** — its annotation appears immediately before AGENTS_USED (as part of the pre-fetched end-of-response block). This includes the gap between CODING_START and the next bookend, the gap between AWAITING_HOOK and HOOK_FEEDBACK, and every other transition
+- **Timestamps on bookends** — every bookend marker must include a real EST timestamp on the same line, placed after the marker text in square brackets. **Three bookends get time+date** (format: `[HH:MM:SS AM/PM EST YYYY-MM-DD]`): CODING PLAN, CODING START, and CODING COMPLETE. **All other bookends get time-only** (format: `[HH:MM:SS AM/PM EST]`). **You must run `date` via the Bash tool and get the result BEFORE writing the bookend line** — you have no internal clock, so any timestamp written without calling `date` first is fabricated. Use `TZ=America/New_York date '+%I:%M:%S %p EST %Y-%m-%d'` for the time+date bookends and `TZ=America/New_York date '+%I:%M:%S %p EST'` for time-only bookends. Do not guess, estimate, or anchor on times mentioned in the user's message. The small delay before text appears is an acceptable tradeoff for accuracy. For the opening pair (CODING PLAN + CODING START), a single `date` call is sufficient — run it once before any text output and reuse the same timestamp for both markers. For subsequent bookends mid-response, call `date` inline before writing the marker. End-of-response section headers (AGENTS USED, FILES CHANGED, COMMIT LOG, WORTH NOTING, SUMMARY) do not get timestamps. **CODING COMPLETE's `date` call must happen before AGENTS USED** — fetch the timestamp, then write the entire end-of-response block (AGENTS USED → FILES CHANGED → COMMIT LOG → WORTH NOTING → SUMMARY → CODING COMPLETE) as one uninterrupted text output using the pre-fetched timestamp
+- **Duration annotations** — a `⏱️` annotation appears between **every** consecutive pair of bookends (and before the end-of-response block). No exceptions — if two bookends appear in sequence, there must be a `⏱️` line between them. Format: `⏱️ Xs` (or `Xm Ys` for durations over 60 seconds). The duration is calculated by subtracting the previous bookend's timestamp from the current time. **You must run `date` to get the current time and compute the difference** — never estimate durations mentally. If a phase lasted less than 1 second, write `⏱️ <1s`. **The last working phase always gets a `⏱️`** — its annotation appears immediately before AGENTS USED (as part of the pre-fetched end-of-response block). This includes the gap between CODING START and the next bookend, the gap between AWAITING HOOK and HOOK FEEDBACK, and every other transition
 
 ### Bookend Summary
 
 | Bookend | When | Position | Timestamp | Duration |
 |---------|------|----------|-----------|----------|
-| `🚩🚩CODING_PLAN🚩🚩 [HH:MM:SS AM EST YYYY-MM-DD]` | Response will make changes | Very first line of response (skip if purely informational) | Required | — |
-| `⚡⚡CODING_START⚡⚡ [HH:MM:SS AM EST YYYY-MM-DD]` | Work is beginning | After coding plan bullets (or first line if no plan) | Required | `⏱️` before next bookend |
-| `📋📋PLAN_APPROVED📋📋 [HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) | Required | — |
+| `🚩🚩CODING PLAN🚩🚩 [HH:MM:SS AM EST YYYY-MM-DD]` | Response will make changes | Very first line of response (skip if purely informational) | Required | — |
+| `⚡⚡CODING START⚡⚡ [HH:MM:SS AM EST YYYY-MM-DD]` | Work is beginning | After coding plan bullets (or first line if no plan) | Required | `⏱️` before next bookend |
+| `📋📋PLAN APPROVED📋📋 [HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING PLAN + CODING START (only allowed repeat) | Required | — |
 | `✔️✔️CHECKLIST✔️✔️ [HH:MM:SS AM EST]` | A mandatory checklist is executing | Before the checklist name, during work | Required | `⏱️` before next bookend |
 | `🔍🔍RESEARCHING🔍🔍 [HH:MM:SS AM EST]` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) | Required | `⏱️` before next bookend |
-| `🔄🔄NEXT_PHASE🔄🔄 [HH:MM:SS AM EST]` | Work pivots to a new sub-task | During work, between phases (never repeats CODING_PLAN/CODING_START) | Required | `⏱️` before next bookend |
+| `🔄🔄NEXT PHASE🔄🔄 [HH:MM:SS AM EST]` | Work pivots to a new sub-task | During work, between phases (never repeats CODING PLAN/CODING START) | Required | `⏱️` before next bookend |
 | `🚧🚧BLOCKED🚧🚧 [HH:MM:SS AM EST]` | An obstacle was hit | During work, when the problem is encountered | Required | `⏱️` before next bookend |
 | `🧪🧪VERIFYING🧪🧪 [HH:MM:SS AM EST]` | Entering a verification phase | During work, after edits are applied | Required | `⏱️` before next bookend |
-| `🐟🐟AWAITING_HOOK🐟🐟 [HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire | Required | `⏱️` before HOOK_FEEDBACK |
-| `⚓⚓HOOK_FEEDBACK⚓⚓ [HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) | Required | `⏱️` before end-of-response block |
+| `🐟🐟AWAITING HOOK🐟🐟 [HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING COMPLETE when hook will fire | Required | `⏱️` before HOOK FEEDBACK |
+| `⚓⚓HOOK FEEDBACK⚓⚓ [HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING PLAN as opener) | Required | `⏱️` before end-of-response block |
 | `⏱️ Xs` | Phase just ended | Immediately before the next bookend marker | — | Computed |
-| `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` | End-of-response block begins | After last `⏱️`, before AGENTS_USED | — | — |
-| `🕵🕵AGENTS_USED🕵🕵` | Response performed work | First end-of-response section | — | — |
-| `📁📁FILES_CHANGED📁📁` | Files were modified/created/deleted | After AGENTS_USED (skip if no files changed) | — | — |
-| `🔗🔗COMMIT_LOG🔗🔗` | Commits were made | After FILES_CHANGED (skip if no commits made) | — | — |
-| `🔖🔖WORTH_NOTING🔖🔖` | Something deserves attention | After COMMIT_LOG (skip if nothing worth noting) | — | — |
-| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING_COMPLETE | — | — |
-| `✅✅CODING_COMPLETE✅✅ [HH:MM:SS AM EST YYYY-MM-DD]` | All work done | Always the very last line of response | Required | — |
+| `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` | End-of-response block begins | After last `⏱️`, before AGENTS USED | — | — |
+| `🕵🕵AGENTS USED🕵🕵` | Response performed work | First end-of-response section | — | — |
+| `📁📁FILES CHANGED📁📁` | Files were modified/created/deleted | After AGENTS USED (skip if no files changed) | — | — |
+| `🔗🔗COMMIT LOG🔗🔗` | Commits were made | After FILES CHANGED (skip if no commits made) | — | — |
+| `🔖🔖WORTH NOTING🔖🔖` | Something deserves attention | After COMMIT LOG (skip if nothing worth noting) | — | — |
+| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING COMPLETE | — | — |
+| `✅✅CODING COMPLETE✅✅ [HH:MM:SS AM EST YYYY-MM-DD]` | All work done | Always the very last line of response | Required | — |
 
 ### Flow Examples
 
 **Normal flow (no hook):**
 ```
-🚩🚩CODING_PLAN🚩🚩 [01:15:00 AM EST 2026-01-15]
+🚩🚩CODING PLAN🚩🚩 [01:15:00 AM EST 2026-01-15]
   - brief bullet plan of intended changes
 
-⚡⚡CODING_START⚡⚡ [01:15:01 AM EST 2026-01-15]
+⚡⚡CODING START⚡⚡ [01:15:01 AM EST 2026-01-15]
   ⏱️ <1s
 🔍🔍RESEARCHING🔍🔍 [01:15:01 AM EST]
   ... reading files, searching codebase ...
@@ -68,48 +68,48 @@
   ... validating edits, running hook checks ...
   ⏱️ 15s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🕵🕵AGENTS_USED🕵🕵
+🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — applied changes, ran checklists
-📁📁FILES_CHANGED📁📁
+📁📁FILES CHANGED📁📁
   `file.md` (edited)
   `new-file.js` (created)
-🔗🔗COMMIT_LOG🔗🔗
+🔗🔗COMMIT LOG🔗🔗
   abc1234 — Add feature X
 📝📝SUMMARY📝📝
   - Updated X in `file.md` (edited)
   - Created `new-file.js` (created)
-✅✅CODING_COMPLETE✅✅ [01:17:15 AM EST 2026-01-15]
+✅✅CODING COMPLETE✅✅ [01:17:15 AM EST 2026-01-15]
 ```
 
 **Hook anticipated flow:**
 ```
-🚩🚩CODING_PLAN🚩🚩 [01:15:00 AM EST 2026-01-15]
+🚩🚩CODING PLAN🚩🚩 [01:15:00 AM EST 2026-01-15]
   - brief bullet plan of intended changes
 
-⚡⚡CODING_START⚡⚡ [01:15:01 AM EST 2026-01-15]
+⚡⚡CODING START⚡⚡ [01:15:01 AM EST 2026-01-15]
   ... work (commit without push) ...
   ⏱️ 1m 44s
-🐟🐟AWAITING_HOOK🐟🐟 [01:16:45 AM EST]
+🐟🐟AWAITING HOOK🐟🐟 [01:16:45 AM EST]
   ← hook fires →
   ⏱️ 5s
-⚓⚓HOOK_FEEDBACK⚓⚓ [01:16:50 AM EST]
+⚓⚓HOOK FEEDBACK⚓⚓ [01:16:50 AM EST]
   ... push ...
   ⏱️ 20s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🕵🕵AGENTS_USED🕵🕵
+🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — applied changes, pushed
-📁📁FILES_CHANGED📁📁
+📁📁FILES CHANGED📁📁
   `file.md` (edited)
-🔗🔗COMMIT_LOG🔗🔗
+🔗🔗COMMIT LOG🔗🔗
   abc1234 — Add feature X
 📝📝SUMMARY📝📝
   - Updated X in `file.md`
   - Pushed to remote
-✅✅CODING_COMPLETE✅✅ [01:17:10 AM EST 2026-01-15]
+✅✅CODING COMPLETE✅✅ [01:17:10 AM EST 2026-01-15]
 ```
 
 ### Hook anticipation — bug context
-**The failure pattern:** if the hook conditions are evaluated *before* a `git push` completes (or evaluated mentally instead of actually running the git commands), the prediction can be wrong — e.g. concluding there are unpushed commits when the push already succeeded. Writing `🐟🐟AWAITING_HOOK🐟🐟` in that case means the hook never fires (because all conditions are actually false), and the conversation gets stuck with no `✅✅CODING_COMPLETE✅✅`.
+**The failure pattern:** if the hook conditions are evaluated *before* a `git push` completes (or evaluated mentally instead of actually running the git commands), the prediction can be wrong — e.g. concluding there are unpushed commits when the push already succeeded. Writing `🐟🐟AWAITING HOOK🐟🐟` in that case means the hook never fires (because all conditions are actually false), and the conversation gets stuck with no `✅✅CODING COMPLETE✅✅`.
 
 **What to watch for:** any scenario where actions (especially `git push`) complete in the same response as the hook check. The temptation is to predict the outcome rather than wait and verify.
 
@@ -477,7 +477,7 @@ When a new embedding page is created (see New Embedding Page Setup Checklist), a
 - When organizing, ordering, or explaining anything in this repo, **always reason from the user's perspective** — how they experience the flow, read the output, or understand the structure. Never reason from internal implementation details (response-turn boundaries, tool-call mechanics, API round-trips) when the user-facing view tells a different story
 - The trap: internal mechanics can suggest one ordering/grouping, while the user's actual experience suggests another. When these conflict, the user's experience wins every time
 - Before finalizing any structural decision (ordering lists, grouping related items, naming things), ask: "does this match what the user sees and expects?" If the answer requires knowing implementation details to make sense, the structure is wrong
-- **Example — bookend ordering:** the Bookend Summary table is ordered by the chronological flow as the user experiences it. AWAITING_HOOK and HOOK_FEEDBACK may technically span two response turns, but the user sees them as consecutive events before the final summary. The end-of-response sections (AGENTS_USED through SUMMARY) always come last before CODING_COMPLETE because that's the user's experience — the wrap-up happens once, at the very end, after all work including hook resolution is done
+- **Example — bookend ordering:** the Bookend Summary table is ordered by the chronological flow as the user experiences it. AWAITING HOOK and HOOK FEEDBACK may technically span two response turns, but the user sees them as consecutive events before the final summary. The end-of-response sections (AGENTS USED through SUMMARY) always come last before CODING COMPLETE because that's the user's experience — the wrap-up happens once, at the very end, after all work including hook resolution is done
 
 ---
 > **--- END OF USER-PERSPECTIVE REASONING ---**

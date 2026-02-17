@@ -14,13 +14,13 @@ The bookend system adds overhead to every response. Use this reference if you're
 
 | Component | ~Tokens | Notes |
 |-----------|---------|-------|
-| CODING_PLAN line + bullets | 40–60 | 3–5 bullets typical |
-| CODING_START line | ~15 | Shared `date` call with CODING_PLAN |
+| CODING PLAN line + bullets | 40–60 | 3–5 bullets typical |
+| CODING START line | ~15 | Shared `date` call with CODING PLAN |
 | Mid-response markers (RESEARCHING, VERIFYING, etc.) | 30–45 | Avg 2–3 per response |
 | `⏱️` duration lines | 20–30 | Avg 3–4 per response |
 | `date` command tool calls + results | 120–180 | ~25–35 tokens per round-trip × 4–6 calls |
 | End-of-response block (divider → SUMMARY) | 80–150 | Scales with number of files/commits |
-| CODING_COMPLETE line | ~15 | — |
+| CODING COMPLETE line | ~15 | — |
 | **Total bookend overhead** | **~320–480** | **~5–15% of a typical response** |
 
 **Context (input tokens):**
@@ -28,9 +28,9 @@ The bookend system adds overhead to every response. Use this reference if you're
 - Bookend output overhead is small relative to the instruction payload
 
 **Where to cut if hitting limits:**
-1. `date` calls are the biggest per-token cost — the shared CODING_PLAN/CODING_START call already saves one per response
-2. Mid-response markers (RESEARCHING, NEXT_PHASE, etc.) can be skipped on very short responses where the phase is obvious
-3. End-of-response sections (WORTH_NOTING, FILES_CHANGED) are already skip-if-empty — they cost nothing when unused
+1. `date` calls are the biggest per-token cost — the shared CODING PLAN/CODING START call already saves one per response
+2. Mid-response markers (RESEARCHING, NEXT PHASE, etc.) can be skipped on very short responses where the phase is obvious
+3. End-of-response sections (WORTH NOTING, FILES CHANGED) are already skip-if-empty — they cost nothing when unused
 
 ---
 
@@ -90,9 +90,9 @@ Agent attribution overhead scales with the number of subagents spawned.
 
 | Scenario | ~Output tokens | Notes |
 |----------|---------------|-------|
-| No subagents (Agent 0 only) | 20–30 | Single AGENTS_USED line |
-| 1–2 subagents | 50–80 | AGENTS_USED lines + inline `[Agent N]` prefixes on relayed findings |
-| 3+ subagents | 100–150+ | More prefixed lines + longer AGENTS_USED list |
+| No subagents (Agent 0 only) | 20–30 | Single AGENTS USED line |
+| 1–2 subagents | 50–80 | AGENTS USED lines + inline `[Agent N]` prefixes on relayed findings |
+| 3+ subagents | 100–150+ | More prefixed lines + longer AGENTS USED list |
 
 **Hidden cost:** each Task tool call to spawn a subagent consumes ~50–100 tokens of tool overhead (prompt + result), separate from the attribution output. The subagent's own context window is independent but its summarized result flows back into the main context.
 
