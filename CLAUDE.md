@@ -45,6 +45,9 @@
 ✅✅CODING COMPLETE✅✅
 ```
 
+### Hook anticipation — bug context
+The timing and method requirements in the Hook anticipation bullet were added after a misfire on a fork (demorepo2). During initialization, two commits were pushed in the same response, but Claude mentally predicted the hook conditions *before* the push completed — concluding there were unpushed commits. It wrote `🐟🐟AWAITING HOOK🐟🐟`, but the push had already succeeded, so all three conditions were false. The hook correctly did not fire, leaving the conversation stuck. The fix added two explicit requirements: (1) evaluate *after* all actions complete (including `git push`), and (2) *actually run* the git commands rather than predicting the outcome. The "Commit-and-push flow" example was added to make the correct behavior obvious for the push-in-same-response case.
+
 ---
 > **--- END OF CHAT BOOKENDS ---**
 ---
@@ -318,7 +321,7 @@ The Mermaid diagram in `repository-information/ARCHITECTURE.md` contains nodes t
 | `TPL` | `AutoUpdateOnlyHtmlTemplate.html` | `TPL["...\n(build-version: 01.00w — never bumped)"]` | Frozen at `01.00w` — never changes |
 
 ### Why the miss happens
-Pre-Commit items #2 and #3 explicitly name `<meta name="build-version">` and `<page-name>.version.txt` — so those files always get bumped. But the ARCHITECTURE.md diagram is a separate representation of the same versions. If item #6 doesn't call out each node by name, it's easy to update INDEX and forget VERTXT (since the `.version.txt` file itself was already bumped in item #3).
+Pre-Commit items #2 and #3 explicitly name `<meta name="build-version">` and `<page-name>.version.txt` — so those files always get bumped. But the ARCHITECTURE.md diagram is a separate representation of the same versions. If item #6 doesn't call out each node by name, it's easy to update INDEX and forget VERTXT (since the `.version.txt` file itself was already bumped in item #3). This was discovered on a fork (demorepo3) where a `01.00w` → `01.01w` bump correctly updated `index.html`, `index.version.txt`, and `STATUS.md`, but only the INDEX Mermaid node was bumped — VERTXT was left at `01.00w`, requiring manual intervention. Hardening item #6 with explicit node names prevents this class of miss.
 
 ### Adding new pages
 When a new embedding page is created (see New Embedding Page Setup Checklist), add corresponding nodes to the diagram:
