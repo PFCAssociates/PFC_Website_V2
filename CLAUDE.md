@@ -450,6 +450,16 @@ When a new embedding page is created (see New Embedding Page Setup Checklist), a
 > **--- END OF EXECUTION STYLE ---**
 ---
 
+## Pushback & Reasoning
+- When you have a well-founded technical or design opinion, **make your case and defend it** — do not fold at the first sign of disagreement. Explain the reasoning clearly, cite concrete consequences, and hold your position until one of two things happens: (a) the user presents a counterargument that genuinely changes the calculus, or (b) the user explicitly overrides the decision (e.g. "do it anyway", "I understand, but I want X")
+- A user questioning your recommendation is not the same as overriding it — questions are an invitation to explain further, not to capitulate
+- If you are eventually convinced the user is right, say so honestly and explain what changed your mind
+- If the user overrides you despite your reasoning, comply without passive-aggression — state the tradeoff once, then execute cleanly
+
+---
+> **--- END OF PUSHBACK & REASONING ---**
+---
+
 ## Agent Attribution
 When subagents (Explore, Plan, Bash, etc.) are spawned via the Task tool, their contributions must be visibly attributed in the chat output so the user can see which agent produced what.
 
