@@ -1,7 +1,7 @@
 # Claude Code Instructions
 
 ## Chat Bookends (MANDATORY — EVERY PROMPT)
-- **First output — coding plan**: for every user prompt that will involve changes, the very first line written to chat must be `🚩🚩CODING PLAN🚩🚩` on its own line, followed by a brief bullet-point list of what will be done in this response, then `⚡⚡CODING START⚡⚡` on its own line to signal work is beginning. Keep the plan concise — one bullet per distinct action (e.g. "Edit CLAUDE.md to add coding plan rule", "Update README.md timestamp"). This is for transparency, not approval — do NOT wait for user confirmation before proceeding. If the response is purely informational with no changes to make, skip the plan and open with `⚡⚡CODING START⚡⚡` directly
+- **First output — coding plan**: for every user prompt that will involve changes, the very first line written to chat must be `🚩🚩CODING PLAN🚩🚩` on its own line, followed by a brief bullet-point list of what will be done in this response, then a **blank line** followed by `⚡⚡CODING START⚡⚡` on its own line to signal work is beginning. The blank line is required to break out of the bullet list context so CODING START renders left-aligned. Keep the plan concise — one bullet per distinct action (e.g. "Edit CLAUDE.md to add coding plan rule", "Update README.md timestamp"). This is for transparency, not approval — do NOT wait for user confirmation before proceeding. If the response is purely informational with no changes to make, skip the plan and open with `⚡⚡CODING START⚡⚡` directly
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK FEEDBACK⚓⚓`, then `⚡⚡CODING START⚡⚡`
 - **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead
 - **Summary of changes**: immediately before `✅✅CODING COMPLETE✅✅` (or `🐟🐟AWAITING HOOK🐟🐟`), output `📝📝SUMMARY OF CHANGES📝📝` on its own line followed by a concise bullet-point summary of all changes applied in the current response. Each bullet must indicate which file(s) were edited (e.g. "Updated build-version in `live-site-pages/index.html`"). If a bullet describes a non-file action (e.g. "Pushed to remote"), no file path is needed. This summary appears in every response that made changes (code edits, commits, pushes, file modifications). Skip the summary only if the response was purely informational with no changes made
@@ -28,6 +28,7 @@
 ```
 🚩🚩CODING PLAN🚩🚩
   - brief bullet plan of intended changes
+
 ⚡⚡CODING START⚡⚡
   ... work ...
 📝📝SUMMARY OF CHANGES📝📝
@@ -41,6 +42,7 @@
 ```
 🚩🚩CODING PLAN🚩🚩
   - brief bullet plan of intended changes
+
 ⚡⚡CODING START⚡⚡
   ... work (commit without push) ...
 📝📝SUMMARY OF CHANGES📝📝
@@ -52,6 +54,7 @@
 ⚓⚓HOOK FEEDBACK⚓⚓
 🚩🚩CODING PLAN🚩🚩
   - push to claude/* branch
+
 ⚡⚡CODING START⚡⚡
   ... push ...
 ✅✅CODING COMPLETE✅✅
@@ -61,6 +64,7 @@
 ```
 🚩🚩CODING PLAN🚩🚩
   - brief bullet plan of intended changes
+
 ⚡⚡CODING START⚡⚡
   ... work (commit AND push in same response) ...
   ... run git hook checks — all clean ...
@@ -453,6 +457,7 @@ When subagents (Explore, Plan, Bash, etc.) are spawned via the Task tool, their 
   - Explore the codebase for auth patterns
   - Design the implementation
   - Apply changes
+
 ⚡⚡CODING START⚡⚡
 
 Agent 1 (Explore) searched for existing auth patterns and found...
