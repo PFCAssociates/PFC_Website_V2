@@ -7,7 +7,7 @@
 - **Continuation after user interaction**: when `AskUserQuestion` or `ExitPlanMode` returns mid-response (the user answered a question or approved a plan), the response continues but must **NOT** repeat `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. Instead:
   - After `AskUserQuestion`: use `🔄🔄NEXT PHASE🔄🔄` with a description incorporating the user's choice (e.g. "User chose option A — proceeding with implementation")
   - After `ExitPlanMode` (plan approved): output `📋📋PLAN APPROVED📋📋` on its own line, followed by `🚩🚩CODING PLAN🚩🚩` with the execution plan bullets, then `⚡⚡CODING START⚡⚡`. This is the **only** scenario where CODING PLAN/CODING START may appear a second time — because plan approval is a distinct boundary between planning and execution, and the user needs to see the execution plan clearly. The `📋📋PLAN APPROVED📋📋` marker signals that this is a continuation, not a new prompt
-- **Checklist running**: output `⚠️⚠️CHECKLIST RUNNING⚠️⚠️` on its own line before executing any mandatory checklist (Session Start, Pre-Commit, Pre-Push), followed by the checklist name (e.g. `Session Start Checklist`). This separates checklist overhead from the user's actual task. Output once per checklist invocation
+- **Checklist running**: output `👟👟CHECKLIST RUNNING👟👟` on its own line before executing any mandatory checklist (Session Start, Pre-Commit, Pre-Push), followed by the checklist name (e.g. `Session Start Checklist`). This separates checklist overhead from the user's actual task. Output once per checklist invocation
 - **Researching**: output `🔍🔍RESEARCHING🔍🔍` on its own line when entering a research/exploration phase — reading files, searching the codebase, or understanding context before making changes. Skip if going straight to changes without research
 - **Verifying**: output `🧪🧪VERIFYING🧪🧪` on its own line when entering a verification phase — running git hook checks, confirming no stale references, validating edits post-change. Separates "doing the work" from "checking the work"
 - **Blocked**: output `🚧🚧BLOCKED🚧🚧` on its own line when an obstacle is hit (permission denied, merge conflict, ambiguous requirement, failed push, hook check failure). Follow with a brief description of the blocker. This makes problems immediately visible rather than buried in tool output
@@ -16,7 +16,7 @@
   - **Agents used**: output `🕵🕵AGENTS USED🕵🕵` followed by a list of all agents that contributed to this response — including Agent 0 (Main). Format: `Agent N (Type) — brief description of contribution`. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
   - **Files changed**: output `📁📁FILES CHANGED📁📁` followed by a list of every file modified in the response, each tagged with the type of change: `(edited)`, `(created)`, or `(deleted)`. This gives a clean at-a-glance file manifest. Skip if no files were changed in the response
   - **Commit log**: output `🔗🔗COMMIT LOG🔗🔗` followed by a list of every commit made in the response, formatted as `SHORT_SHA — commit message`. Skip if no commits were made in the response
-  - **Warnings**: output `⚠️⚠️WARNINGS⚠️⚠️` followed by a list of anything that deserves attention but isn't a blocker (e.g. "Push-once already used — did not push again", "Template repo guard skipped version bumps", "Pre-commit hook modified files — re-staged"). Skip if there are no warnings
+  - **Worth noting**: output `🔖🔖WORTH NOTING🔖🔖` followed by a list of anything that deserves attention but isn't a blocker (e.g. "Push-once already used — did not push again", "Template repo guard skipped version bumps", "Pre-commit hook modified files — re-staged"). Skip if there are nothing worth noting
   - **Summary of changes**: output `📝📝SUMMARY OF CHANGES📝📝` on its own line followed by a concise bullet-point summary of all changes applied in the current response. Each bullet must indicate which file(s) were edited (e.g. "Updated build-version in `live-site-pages/index.html`"). If a bullet describes a non-file action (e.g. "Pushed to remote"), no file path is needed. This is the last section before `✅✅CODING COMPLETE✅✅` (or `🐟🐟AWAITING HOOK🐟🐟`)
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
@@ -31,14 +31,14 @@
 | `🔄🔄NEXT PHASE🔄🔄` | Work pivots to a new sub-task within the same response | During work, between phases (never repeats CODING PLAN/CODING START) |
 | `📋📋PLAN APPROVED📋📋` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING PLAN + CODING START (only allowed repeat) |
 | `⚓⚓HOOK FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING PLAN as opener) |
-| `⚠️⚠️CHECKLIST RUNNING⚠️⚠️` | A mandatory checklist is executing (Session Start, Pre-Commit, Pre-Push) | Before the checklist name, during work |
+| `👟👟CHECKLIST RUNNING👟👟` | A mandatory checklist is executing (Session Start, Pre-Commit, Pre-Push) | Before the checklist name, during work |
 | `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase before making changes | During work, before edits begin (skip if going straight to changes) |
 | `🧪🧪VERIFYING🧪🧪` | Entering a verification phase (hook checks, validating edits) | During work, after edits are applied |
 | `🚧🚧BLOCKED🚧🚧` | An obstacle was hit (permission denied, merge conflict, failed push, etc.) | During work, when the problem is encountered |
 | `🕵🕵AGENTS USED🕵🕵` | Response performed work (changes, commits, research) | After all work, first end-of-response section |
 | `📁📁FILES CHANGED📁📁` | Files were modified, created, or deleted in the response | After AGENTS USED (skip if no files changed) |
 | `🔗🔗COMMIT LOG🔗🔗` | Commits were made in the response | After FILES CHANGED (skip if no commits made) |
-| `⚠️⚠️WARNINGS⚠️⚠️` | Something deserves attention but isn't a blocker | After COMMIT LOG (skip if no warnings) |
+| `🔖🔖WORTH NOTING🔖🔖` | Something deserves attention but isn't a blocker | After COMMIT LOG (skip if nothing worth noting) |
 | `📝📝SUMMARY OF CHANGES📝📝` | Changes were made in the current response | Last section before CODING COMPLETE (skip if purely informational) |
 | `🐟🐟AWAITING HOOK🐟🐟` | Hook conditions are true after all actions complete (unpushed commits, uncommitted changes, or untracked files detected by running git commands) | Last line of response (replaces CODING COMPLETE) |
 | `✅✅CODING COMPLETE✅✅` | All work is done and no hook is anticipated | Last line of response |
@@ -54,7 +54,7 @@
 🔍🔍RESEARCHING🔍🔍
   ... reading files, searching codebase ...
   ... applying changes ...
-⚠️⚠️CHECKLIST RUNNING⚠️⚠️
+👟👟CHECKLIST RUNNING👟👟
   Pre-Commit Checklist
   ... checklist items ...
 🧪🧪VERIFYING🧪🧪
@@ -88,7 +88,7 @@
   Fix related issue discovered during Edit 1
   ... applying Edit 1a ...
 
-⚠️⚠️CHECKLIST RUNNING⚠️⚠️
+👟👟CHECKLIST RUNNING👟👟
   Pre-Commit Checklist
   ... checklist items ...
 🕵🕵AGENTS USED🕵🕵
@@ -218,7 +218,7 @@
   ... resolution or asking user for guidance ...
 🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — attempted push, hit blocker
-⚠️⚠️WARNINGS⚠️⚠️
+🔖🔖WORTH NOTING🔖🔖
   Push-once already used — did not push again
 📝📝SUMMARY OF CHANGES📝📝
   - bullet summary of what was accomplished
