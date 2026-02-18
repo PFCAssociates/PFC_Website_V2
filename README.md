@@ -2,14 +2,14 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-18 09:36:18 AM EST`
+Last updated: `2026-02-18 09:38:58 AM EST`
 
 You are currently using the **autoupdatehtmltemplate** developed by **ShadowAISolutions**<br>
 Update your code and claude will update the live site link here
 
 ## Copy This Repository
 
-> <sup>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sup>
+> <sub>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sub>
 
 1. Go to [**GitHub Importer**](https://github.com/new/import)
 2. Click the **⧉** button below to copy the URL, then paste it into the **source repository URL** field:
@@ -25,7 +25,7 @@ https://github.com/ShadowAISolutions/autoupdatehtmltemplate
 
 > **Important:** The links in steps 1 and 2 below point to the settings of **whichever repo you are viewing this page from**. Make sure you are reading this on **your own copy** of the repository, not on the original template repo — otherwise the links will lead to a 404 page.
 
-> <sup>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sup>
+> <sub>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sub>
 
 ### 1. Enable GitHub Pages
 
@@ -105,7 +105,7 @@ autoupdatehtmltemplate/
 
 ## Documentation
 
-> <sup>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sup>
+> <sub>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sub>
 
 | Document | Description |
 |----------|-------------|
@@ -118,7 +118,7 @@ autoupdatehtmltemplate/
 
 ## Community
 
-> <sup>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sup>
+> <sub>**Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep this ReadMe visible while you work.</sub>
 
 | Document | Description |
 |----------|-------------|
