@@ -22,7 +22,7 @@
 - **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead. **Do not forget the `⏱️` duration annotation** — AWAITING HOOK is a bookend like any other, so the previous phase's `⏱️` must appear immediately before it. After the hook anticipation git commands complete, call `date`, compute the duration since the previous bookend's timestamp, write the `⏱️` line, then write AWAITING HOOK
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK FEEDBACK⚓⚓`, then `⚡⚡CODING START⚡⚡`
 - **End-of-response sections**: after all work is done, output the following sections in this exact order. Skip the entire block only if the response was purely informational with no changes made. **The entire block — from the `━━━` divider through CODING COMPLETE — must be written as one continuous text output with no tool calls in between.** To achieve this, run the `date` command for CODING COMPLETE's timestamp **before** starting the block, then output: the last phase's `⏱️` duration, a `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` divider on its own line (Unicode heavy horizontal line — visually separating work phases from the end-of-response block), then AGENTS USED through CODING COMPLETE using the pre-fetched timestamp:
-  - **Agents used**: output `🕵🕵AGENTS USED🕵🕵` followed by a list of all agents that contributed to this response — including Agent 0 (Main). Format: `Agent N (Type) — brief description of contribution`. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
+  - **Agents used**: output `🕵🕵AGENTS USED🕵🕵` followed by a **numbered list** of all agents that contributed to this response — including Agent 0 (Main). Format: `1. Agent N (Type) — brief description of contribution`. Number each agent sequentially starting from 1. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
   - **Files changed**: output `📁📁FILES CHANGED📁📁` followed by a list of every file modified in the response, each tagged with the type of change: `(edited)`, `(created)`, or `(deleted)`. This gives a clean at-a-glance file manifest. Skip if no files were changed in the response
   - **Commit log**: output `🔗🔗COMMIT LOG🔗🔗` followed by a list of every commit made in the response, formatted as `SHORT_SHA — commit message`. Skip if no commits were made in the response
   - **Worth noting**: output `🔖🔖WORTH NOTING🔖🔖` followed by a list of anything that deserves attention but isn't a blocker (e.g. "Push-once already used — did not push again", "Template repo guard skipped version bumps", "Pre-commit hook modified files — re-staged"). Skip if there are nothing worth noting
@@ -84,7 +84,7 @@
   ⏱️ 15s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — applied changes, ran checklists
+  1. Agent 0 (Main) — applied changes, ran checklists
 📁📁FILES CHANGED📁📁
   `file.md` (edited)
   `new-file.js` (created)
@@ -114,7 +114,7 @@
   ⏱️ 20s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — applied changes, pushed
+  1. Agent 0 (Main) — applied changes, pushed
 📁📁FILES CHANGED📁📁
   `file.md` (edited)
 🔗🔗COMMIT LOG🔗🔗
