@@ -2,20 +2,20 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-18 10:23:00 AM EST`
+Last updated: `2026-02-18 10:26:09 AM EST`
 
 You are currently using the **autoupdatehtmltemplate** developed by **ShadowAISolutions**<br>
 Update your code and claude will update the live site link here
 
 ## Copy This Repository
 
-1. Click the **⧉** button below to copy this template's URL:
+1. Click the `⧉` button below to copy this template's URL:
 
 ```
 https://github.com/ShadowAISolutions/autoupdatehtmltemplate
 ```
 
-   > <sub>**Tip:** Link below navigates away from this page. **Shift + click** (or `Right-click` → `Open in new window`) to keep this ReadMe visible while you work.</sub>
+   > <sub>**Tip:** Link below navigates away from this page. `Shift + click` (or `Right-click` → `Open in new window`) to keep this ReadMe visible while you work.</sub>
 
 2. Go to [**GitHub Importer**](https://github.com/new/import) and paste what you just copied into the `The URL for your source repository *` field
 3. Fill in the `Repository name *` field with a descriptive name of your choice
@@ -23,7 +23,7 @@ https://github.com/ShadowAISolutions/autoupdatehtmltemplate
 
 ## Initialize This Template
 
-> **Important:** The links in steps 1 and 2 below point to the settings of **whichever repo you are viewing this page from**. Make sure you are reading this on **your own copy** of the repository, not on the original template repo — otherwise the links will lead to a 404 page.
+> **Important:** The links in steps 1 and 2 below point to the settings of **whichever repo you are viewing this page from**. Make sure you are reading this on `your own copy` of the repository, not on the original template repo — otherwise the links will lead to a 404 page.
 
 > <sub>**Tip:** Links below navigate away from this page. `Right-click` → `Open in new window` to keep this ReadMe visible while you work.</sub>
 
