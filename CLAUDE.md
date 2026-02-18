@@ -661,6 +661,16 @@ When creating a new markdown file with links to GitHub web app routes (issues, s
 > **--- END OF PROVENANCE MARKERS ---**
 ---
 
+## Web Search Confidence
+- When relaying information from web search results, **distinguish verified facts from untested inferences**. A search summarizer may stitch together separate facts into a plausible-sounding conclusion that no source actually confirms
+- **Before presenting a web search finding as fact**, check whether any of the underlying source links explicitly confirm the claim. If the conclusion is the summarizer's extrapolation (e.g. assuming a REST API parameter name also works as a URL query parameter), flag it: *"This might work but I can't verify it — you'd need to test it"*
+- **Never pass along a synthesized conclusion as confirmed** just because it sounds reasonable. If the gap between what the sources say and what the summary concludes requires inference, say so explicitly
+- When in doubt, default to: *"Based on search results, this appears to be the case, but I wasn't able to find direct confirmation — treat this as an untested inference"*
+
+---
+> **--- END OF WEB SEARCH CONFIDENCE ---**
+---
+
 ## Developer Branding
 *Rule: see Pre-Commit Checklist item #10. Syntax reference below.*
 - HTML: `<!-- Developed by: DEVELOPER_NAME -->`
