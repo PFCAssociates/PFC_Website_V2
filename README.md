@@ -2,7 +2,7 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-19 01:09:32 PM EST`
+Last updated: `2026-02-19 01:21:43 PM EST`
 
 **Live site:** [PFCAssociates.github.io/PFC_Website_V2](https://PFCAssociates.github.io/PFC_Website_V2)
 
