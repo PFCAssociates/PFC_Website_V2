@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.01w">
+  <meta name="build-version" content="01.02w">
   <meta name="template-id" content="sais-aut-7f3e9b2d">
   <title>PFC Associates — D.C. Police &amp; Fire Clinic</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,6 +69,12 @@
       --radius: 12px;
     }
 
+    /* ── NAV LOGO ─────────────────────────────────────────── */
+    .nav-logo {
+      height: 40px; width: auto; display: inline-block;
+      border-radius: 4px; flex-shrink: 0;
+    }
+
     /* ── NAVIGATION ───────────────────────────────────────── */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -128,24 +134,34 @@
     /* ── HERO ─────────────────────────────────────────────── */
     .hero {
       position: relative; min-height: 100vh; display: flex; align-items: center;
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, var(--blue) 100%);
+      background: var(--navy);
       overflow: hidden;
     }
+    .hero-bg-image {
+      position: absolute; inset: 0; z-index: 0;
+    }
+    .hero-bg-img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(135deg, rgba(12,29,58,0.85) 0%, rgba(20,42,79,0.75) 50%, rgba(30,58,95,0.7) 100%);
+    }
     .hero::before {
-      content: ''; position: absolute; inset: 0;
+      content: ''; position: absolute; inset: 0; z-index: 2;
       background:
         radial-gradient(ellipse 80% 60% at 70% 40%, rgba(200,169,97,0.07) 0%, transparent 70%),
         radial-gradient(ellipse 60% 80% at 20% 80%, rgba(30,58,95,0.3) 0%, transparent 60%);
     }
     .hero-grid {
-      position: absolute; inset: 0; opacity: 0.03;
+      position: absolute; inset: 0; opacity: 0.03; z-index: 3;
       background-image:
         linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
       background-size: 60px 60px;
     }
     .hero-content {
-      position: relative; max-width: 1200px; margin: 0 auto; padding: 120px 24px 80px;
+      position: relative; z-index: 4; max-width: 1200px; margin: 0 auto; padding: 120px 24px 80px;
       display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
     }
     .hero-text { color: var(--white); }
@@ -271,8 +287,50 @@
       letter-spacing: 1px;
     }
 
+    /* About section images */
+    .about-image-wrapper {
+      margin: 24px 0; border-radius: var(--radius); overflow: hidden;
+      border: 2px dashed var(--gray-200); background: var(--off-white);
+    }
+    .about-image {
+      width: 100%; height: auto; display: block;
+      border-radius: var(--radius);
+    }
+    .about-visual-column {
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .about-team-image {
+      border-radius: var(--radius); overflow: hidden;
+      border: 2px dashed var(--gray-200); background: var(--off-white);
+    }
+    .about-team-image img {
+      width: 100%; height: auto; display: block;
+    }
+
     @media (max-width: 900px) {
       .about-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── IMAGE BANNER ─────────────────────────────────────── */
+    .image-banner {
+      position: relative; width: 100%; height: 320px; overflow: hidden;
+    }
+    .image-banner-img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .image-banner-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(12,29,58,0.7) 0%, rgba(30,58,95,0.5) 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .image-banner-text { text-align: center; padding: 24px; }
+    .image-banner-tagline {
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 700;
+      color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    @media (max-width: 600px) {
+      .image-banner { height: 220px; }
     }
 
     /* ── SERVICES ──────────────────────────────────────────── */
@@ -453,6 +511,7 @@
       font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
       text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
     }
+    .footer-logo { height: 48px; width: auto; margin-bottom: 16px; opacity: 0.8; }
     .footer-brand p { margin-bottom: 12px; font-size: 0.88rem; line-height: 1.7; }
     .footer-brand .tagline-footer {
       font-size: 0.75rem; font-weight: 600; letter-spacing: 1.5px;
@@ -496,6 +555,7 @@
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="#hero" class="nav-brand">
+        <img src="images/pfc-logo.svg" alt="PFC Associates Logo" class="nav-logo">
         PFC Associates
         <span class="badge">D.C. CLINIC</span>
       </a>
@@ -517,6 +577,10 @@
   <!-- HERO                                                   -->
   <!-- ═══════════════════════════════════════════════════════ -->
   <section class="hero" id="hero">
+    <div class="hero-bg-image" role="img" aria-label="Police and Fire Clinic building">
+      <img src="images/hero-background.svg" alt="" class="hero-bg-img">
+    </div>
+    <div class="hero-overlay"></div>
     <div class="hero-grid"></div>
     <div class="hero-content">
       <div class="hero-text">
@@ -561,6 +625,9 @@
             <h2>A Unique Public-Private Partnership</h2>
           </div>
           <p>PFC Associates, a joint venture of Providence Hospital and the Washington Hospital Center, initiated a unique privatization project with the government of the District of Columbia to deliver occupational medicine and behavioral health services to the city's first responders.</p>
+          <div class="about-image-wrapper fade-in">
+            <img src="images/clinic-building.svg" alt="PFC Associates clinic building" class="about-image">
+          </div>
           <div class="about-features">
             <div class="about-feature">
               <div class="icon">&#9733;</div>
@@ -585,11 +652,16 @@
             </div>
           </div>
         </div>
-        <div class="about-visual">
-          <div class="mission-label">Our Mission</div>
-          <blockquote>PFC Associates, LLC, will develop and practice innovative approaches to appraising, initiating, maintaining, and restoring the physical, psychological and emotional health of Police Officers, Firefighters and other members covered in the District of Columbia whom we serve.</blockquote>
-          <div class="divider"></div>
-          <div class="tagline">PROTECTING AND SERVING THOSE WHO PROTECT AND SERVE US</div>
+        <div class="about-visual-column">
+          <div class="about-visual">
+            <div class="mission-label">Our Mission</div>
+            <blockquote>PFC Associates, LLC, will develop and practice innovative approaches to appraising, initiating, maintaining, and restoring the physical, psychological and emotional health of Police Officers, Firefighters and other members covered in the District of Columbia whom we serve.</blockquote>
+            <div class="divider"></div>
+            <div class="tagline">PROTECTING AND SERVING THOSE WHO PROTECT AND SERVE US</div>
+          </div>
+          <div class="about-team-image fade-in">
+            <img src="images/medical-team.svg" alt="PFC Associates medical team" class="about-image">
+          </div>
         </div>
       </div>
     </div>
@@ -651,6 +723,18 @@
           <h3>Bloodborne Pathogen</h3>
           <p>Post-exposure surveillance and treatment services for occupational exposures.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- IMAGE BANNER                                           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="image-banner fade-in">
+    <img src="images/first-responders.svg" alt="D.C. first responders" class="image-banner-img">
+    <div class="image-banner-overlay">
+      <div class="image-banner-text">
+        <span class="image-banner-tagline">Protecting and Serving Those Who Protect and Serve Us</span>
       </div>
     </div>
   </section>
@@ -968,6 +1052,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
+        <img src="images/pfc-logo.svg" alt="PFC Associates Logo" class="footer-logo">
         <h4>PFC Associates</h4>
         <p>A joint venture of Providence Hospital and the Washington Hospital Center, providing occupational and preventive medical services to D.C.'s first responders.</p>
         <div class="tagline-footer">Protecting and serving those who protect and serve us</div>

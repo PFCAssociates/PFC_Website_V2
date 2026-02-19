@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#1a2d4a" rx="12"/>
+  <!-- Shield silhouette -->
+  <path d="M400 100 L460 130 L460 220 Q460 280 400 320 Q340 280 340 220 L340 130 Z" fill="rgba(200,169,97,0.15)" stroke="rgba(200,169,97,0.3)" stroke-width="2"/>
+  <text x="400" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" fill="rgba(200,169,97,0.4)" font-weight="bold">&#9733;</text>
+  <text x="400" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="rgba(255,255,255,0.3)" font-weight="bold">PLACEHOLDER: First Responders Image</text>
+  <text x="400" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="rgba(255,255,255,0.2)">Replace with police/firefighter photo (800×500)</text>
+</svg>
+<!-- Developed by: PFCAssociates -->

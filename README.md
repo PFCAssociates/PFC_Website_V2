@@ -2,7 +2,7 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-19 12:25:59 PM EST`
+Last updated: `2026-02-19 01:09:32 PM EST`
 
 **Live site:** [PFCAssociates.github.io/PFC_Website_V2](https://PFCAssociates.github.io/PFC_Website_V2)
 
@@ -30,6 +30,7 @@ PFC_Website_V2/
 ├── live-site-pages/             # Deployed to GitHub Pages
 │   ├── index.html              # Live landing page
 │   ├── index.version.txt       # Version file for auto-refresh
+│   ├── images/                 # Site images (placeholder SVGs)
 │   └── sounds/                 # Audio feedback files
 ├── live-site-templates/        # Template for new pages
 ├── .github/
