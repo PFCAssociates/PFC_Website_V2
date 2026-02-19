@@ -2,7 +2,7 @@
 
 ```mermaid
 graph TB
-    subgraph "Repository: autoupdatehtmltemplate"
+    subgraph "Repository: PFC_Website_V2"
         direction TB
 
         subgraph "Developer Workflow"
@@ -27,7 +27,7 @@ graph TB
 
         subgraph "GitHub Pages Deployment"
             DEPLOY_PAGES["Deploy live-site-pages/ to\nGitHub Pages"]
-            LIVE["Live Site\nShadowAISolutions.github.io/autoupdatehtmltemplate"]
+            LIVE["Live Site\nPFCAssociates.github.io/PFC_Website_V2"]
             DEPLOY_PAGES --> LIVE
         end
 
@@ -74,7 +74,7 @@ graph TB
     style CLAUDE_MD fill:#ce93d8,color:#000
 ```
 
-Developed by: ShadowAISolutions
+Developed by: PFCAssociates
 
 
 

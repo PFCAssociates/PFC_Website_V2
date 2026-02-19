@@ -1,13 +1,13 @@
 blank_issues_enabled: false
 contact_links:
   - name: Support
-    url: https://github.com/ShadowAISolutions/autoupdatehtmltemplate/blob/main/repository-information/SUPPORT.md
+    url: https://github.com/PFCAssociates/PFC_Website_V2/blob/main/repository-information/SUPPORT.md
     about: Check our support resources before opening an issue
   - name: Security Vulnerability
-    url: https://github.com/ShadowAISolutions/autoupdatehtmltemplate/security/advisories/new
+    url: https://github.com/PFCAssociates/PFC_Website_V2/security/advisories/new
     about: Report security vulnerabilities privately (do not open a public issue)
 
-# Developed by: ShadowAISolutions
+# Developed by: PFCAssociates
 
 
 

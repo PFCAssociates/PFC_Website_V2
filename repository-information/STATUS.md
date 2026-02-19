@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `live-site-pages/index.html` | v01.00w | *(deploy to activate)* | Active |
+| Landing Page | `live-site-pages/index.html` | v01.00w | [View](https://PFCAssociates.github.io/PFC_Website_V2/) | Active |
 
 ## GAS Projects
 
@@ -18,7 +18,7 @@
 |----------|------|------------------|
 | Auto-Update HTML | `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` | v01.00w |
 
-Developed by: ShadowAISolutions
+Developed by: PFCAssociates
 
 
 

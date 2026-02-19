@@ -1,14 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "autoupdatehtmltemplate"
+title: "PFC_Website_V2"
 abstract: "A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script embedding support."
 authors:
-  - name: "ShadowAISolutions"
+  - name: "PFCAssociates"
 type: software
 license: "All Rights Reserved"
-repository-code: "https://github.com/ShadowAISolutions/autoupdatehtmltemplate"
-url: "https://ShadowAISolutions.github.io/autoupdatehtmltemplate"
-# Developed by: ShadowAISolutions
+repository-code: "https://github.com/PFCAssociates/PFC_Website_V2"
+url: "https://PFCAssociates.github.io/PFC_Website_V2"
+# Developed by: PFCAssociates
 
 
 

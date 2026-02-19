@@ -26,11 +26,11 @@
 ## Checklist
 
 - [ ] Code follows project conventions ([CLAUDE.md](../CLAUDE.md))
-- [ ] All code files end with `Developed by: ShadowAISolutions`
+- [ ] All code files end with `Developed by: PFCAssociates`
 - [ ] Commit message starts with version prefix (if applicable)
 - [ ] No `alert()` / `confirm()` / `prompt()` — custom modals only
 
-<!-- Developed by: ShadowAISolutions -->
+<!-- Developed by: PFCAssociates -->
 
 
 

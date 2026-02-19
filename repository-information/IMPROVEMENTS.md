@@ -20,7 +20,7 @@ Ideas and optimizations to explore — no commitment, investigated when time all
 3. Rename the function to `readPushedVersion()` (dropping "FromCache") for accuracy
 4. Update CLAUDE.md GAS Code Constraints section to reflect the new storage mechanism
 
-Developed by: ShadowAISolutions
+Developed by: PFCAssociates
 
 
 
