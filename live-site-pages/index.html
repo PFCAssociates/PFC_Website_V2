@@ -3,11 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.00w">
+  <meta name="build-version" content="01.01w">
   <meta name="template-id" content="sais-aut-7f3e9b2d">
-  <title>CHANGE THIS PROJECT TITLE TEMPLATE</title>
+  <title>PFC Associates — D.C. Police &amp; Fire Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; }
+    /* ── RESET & BASE ─────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #1a1a2e; background: #fff; line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ── SPLASH (template infrastructure) ─────────────────── */
     .splash {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 10000; display: none; align-items: center; justify-content: center;
@@ -16,6 +31,8 @@
     .splash .splash-title { color: #fff; font: bold 36px/1 sans-serif; margin-bottom: 20px; }
     .splash img { max-width: 500px; max-height: 500px; }
     #splash-green { background: #1b5e20; }
+
+    /* ── VERSION INDICATOR (template infrastructure) ───────── */
     #version-indicator {
       position: fixed; bottom: 8px; right: 8px; z-index: 9999;
       display: flex; align-items: center; gap: 6px;
@@ -31,42 +48,1033 @@
     #version-indicator .dot.found    { background: #66bb6a; }
     #version-indicator .dot.error    { background: #ef5350; }
     @keyframes pulse { from { opacity: 1; } to { opacity: 0.4; } }
+
+    /* ── COLOR PALETTE ────────────────────────────────────── */
+    :root {
+      --navy: #0c1d3a;
+      --navy-light: #142a4f;
+      --blue: #1e3a5f;
+      --accent: #c8a961;
+      --accent-hover: #dbbe74;
+      --red: #9b2335;
+      --white: #ffffff;
+      --off-white: #f5f6fa;
+      --gray-100: #e8eaf0;
+      --gray-200: #d1d5e0;
+      --gray-600: #6b7280;
+      --gray-800: #374151;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+      --radius: 12px;
+    }
+
+    /* ── NAVIGATION ───────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(12, 29, 58, 0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,169,97,0.15);
+      transition: box-shadow 0.3s ease;
+    }
+    .nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 70px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 700; font-size: 1.15rem; color: var(--white);
+    }
+    .nav-brand .badge {
+      background: var(--accent); color: var(--navy); font-size: 0.7rem;
+      font-weight: 800; padding: 3px 8px; border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); font-size: 0.875rem; font-weight: 500;
+      padding: 8px 16px; border-radius: 8px; transition: all 0.2s ease;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--white); background: rgba(255,255,255,0.1);
+    }
+    .nav-cta {
+      background: var(--accent); color: var(--navy); font-weight: 600;
+      font-size: 0.875rem; padding: 10px 20px; border-radius: 8px;
+      transition: all 0.2s ease; border: none; cursor: pointer;
+    }
+    .nav-cta:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    /* Mobile nav toggle */
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .nav-toggle span {
+      display: block; width: 24px; height: 2px; background: var(--white);
+      margin: 6px 0; transition: all 0.3s ease; border-radius: 2px;
+    }
+
+    @media (max-width: 900px) {
+      .nav-toggle { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 70px; left: 0; right: 0;
+        background: var(--navy); flex-direction: column; padding: 16px;
+        border-bottom: 2px solid var(--accent);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 16px; }
+      .nav-cta { display: none; }
+    }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    .hero {
+      position: relative; min-height: 100vh; display: flex; align-items: center;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, var(--blue) 100%);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(200,169,97,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(30,58,95,0.3) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.03;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content {
+      position: relative; max-width: 1200px; margin: 0 auto; padding: 120px 24px 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    .hero-text { color: var(--white); }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: ''; width: 32px; height: 2px; background: var(--accent);
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800;
+      line-height: 1.1; margin-bottom: 24px;
+    }
+    .hero h1 .highlight { color: var(--accent); }
+    .hero p {
+      font-size: 1.1rem; line-height: 1.7; color: rgba(255,255,255,0.7);
+      max-width: 520px; margin-bottom: 32px;
+    }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: var(--navy); font-weight: 600;
+      padding: 14px 28px; border-radius: 8px; font-size: 0.95rem;
+      transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(200,169,97,0.3); }
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.25); color: var(--white); font-weight: 600;
+      padding: 12px 28px; border-radius: 8px; font-size: 0.95rem;
+      transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Hero stats */
+    .hero-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius); padding: 28px 24px; text-align: center;
+      backdrop-filter: blur(8px); transition: all 0.3s ease;
+    }
+    .stat-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); }
+    .stat-number {
+      font-size: 2.4rem; font-weight: 800; color: var(--accent);
+      line-height: 1; margin-bottom: 8px;
+    }
+    .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.6); font-weight: 500; }
+
+    @media (max-width: 900px) {
+      .hero-content { grid-template-columns: 1fr; text-align: center; padding-top: 100px; }
+      .hero p { margin: 0 auto 32px; }
+      .hero-buttons { justify-content: center; }
+      .hero-stats { max-width: 400px; margin: 0 auto; }
+    }
+
+    /* ── SECTIONS (shared) ────────────────────────────────── */
+    .section { padding: 100px 24px; }
+    .section-dark { background: var(--off-white); }
+    .section-navy { background: var(--navy); color: var(--white); }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-header .eyebrow {
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .section-header h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 800; margin-bottom: 16px;
+    }
+    .section-header p {
+      font-size: 1.05rem; color: var(--gray-600); max-width: 600px; margin: 0 auto;
+    }
+    .section-navy .section-header p { color: rgba(255,255,255,0.6); }
+
+    /* ── ABOUT / MISSION ──────────────────────────────────── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    .about-content h3 {
+      font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; color: var(--navy);
+    }
+    .about-content p { color: var(--gray-600); margin-bottom: 20px; }
+    .about-features { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+    .about-feature {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px; border-radius: var(--radius); background: var(--off-white);
+      transition: all 0.2s ease;
+    }
+    .about-feature:hover { background: var(--gray-100); }
+    .about-feature .icon {
+      flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px;
+      background: var(--navy); color: var(--accent); display: flex;
+      align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .about-feature h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+    .about-feature p { font-size: 0.85rem; color: var(--gray-600); margin: 0; }
+
+    .about-visual {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+      border-radius: var(--radius); padding: 48px; color: var(--white);
+      position: relative; overflow: hidden;
+    }
+    .about-visual::before {
+      content: ''; position: absolute; top: -30%; right: -20%;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(200,169,97,0.08);
+    }
+    .about-visual .mission-label {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
+    }
+    .about-visual blockquote {
+      font-size: 1.1rem; line-height: 1.8; font-style: italic;
+      color: rgba(255,255,255,0.85); position: relative;
+    }
+    .about-visual .divider {
+      width: 48px; height: 3px; background: var(--accent);
+      margin: 24px 0; border-radius: 2px;
+    }
+    .about-visual .tagline {
+      font-size: 0.85rem; font-weight: 600; color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── SERVICES ──────────────────────────────────────────── */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .service-card {
+      background: var(--white); border: 1px solid var(--gray-100);
+      border-radius: var(--radius); padding: 32px 28px;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--accent); transform: scaleX(0);
+      transform-origin: left; transition: transform 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-4px); box-shadow: var(--shadow-lg);
+      border-color: transparent;
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: var(--off-white); display: flex; align-items: center;
+      justify-content: center; font-size: 1.5rem; margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .service-card:hover .service-icon { background: var(--navy); }
+    .service-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .service-card p { font-size: 0.88rem; color: var(--gray-600); line-height: 1.6; }
+
+    @media (max-width: 900px) { .services-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .services-grid { grid-template-columns: 1fr; } }
+
+    /* ── STAFF ─────────────────────────────────────────────── */
+    .staff-section { padding-bottom: 60px; }
+    .staff-subsection h3 {
+      font-size: 1.15rem; font-weight: 700; margin-bottom: 32px;
+      padding-bottom: 12px; border-bottom: 2px solid var(--gray-100);
+      color: var(--navy);
+    }
+    .staff-subsection + .staff-subsection { margin-top: 48px; }
+    .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .staff-card {
+      background: var(--white); border: 1px solid var(--gray-100);
+      border-radius: var(--radius); padding: 28px 24px;
+      transition: all 0.3s ease; text-align: center;
+    }
+    .staff-card:hover {
+      transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: transparent;
+    }
+    .staff-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: var(--accent); display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 700; margin: 0 auto 16px;
+    }
+    .staff-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .staff-card .role { font-size: 0.82rem; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+    .staff-card .credentials { font-size: 0.78rem; color: var(--gray-600); margin-bottom: 12px; }
+    .staff-card .phone {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; color: var(--navy); font-weight: 500;
+      padding: 6px 14px; border-radius: 20px; background: var(--off-white);
+      transition: all 0.2s ease;
+    }
+    .staff-card .phone:hover { background: var(--navy); color: var(--white); }
+
+    @media (max-width: 900px) { .staff-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .staff-grid { grid-template-columns: 1fr; } }
+
+    /* ── FAQ ───────────────────────────────────────────────── */
+    .faq-list { max-width: 800px; margin: 0 auto; }
+    .faq-item {
+      border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius);
+      margin-bottom: 12px; overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .faq-item:hover { border-color: rgba(200,169,97,0.3); }
+    .faq-question {
+      width: 100%; background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; color: var(--white); font-size: 0.95rem;
+      font-weight: 600; font-family: inherit; text-align: left;
+      transition: all 0.2s ease;
+    }
+    .faq-question:hover { background: rgba(255,255,255,0.03); }
+    .faq-question .arrow {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,0.08); display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.3s ease; font-size: 0.75rem; color: var(--accent);
+    }
+    .faq-item.open .faq-question .arrow {
+      transform: rotate(180deg); background: var(--accent); color: var(--navy);
+    }
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+    }
+    .faq-answer-inner {
+      padding: 0 24px 20px;
+      font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7;
+    }
+    .faq-answer-inner strong { color: rgba(255,255,255,0.85); }
+
+    /* ── RESOURCES ─────────────────────────────────────────── */
+    .resources-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .resource-group h3 {
+      font-size: 1rem; font-weight: 700; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .resource-group h3 .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    }
+    .resource-list { display: flex; flex-direction: column; gap: 8px; }
+    .resource-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: 8px; background: var(--off-white);
+      font-size: 0.88rem; font-weight: 500; color: var(--navy);
+      transition: all 0.2s ease;
+    }
+    .resource-link:hover { background: var(--gray-100); transform: translateX(4px); }
+    .resource-link .icon { color: var(--accent); flex-shrink: 0; }
+
+    @media (max-width: 600px) { .resources-grid { grid-template-columns: 1fr; } }
+
+    /* ── POLICIES ──────────────────────────────────────────── */
+    .policies-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+    .policy-card {
+      background: var(--white); border: 1px solid var(--gray-100);
+      border-radius: var(--radius); padding: 32px;
+    }
+    .policy-card h3 {
+      font-size: 1rem; font-weight: 700; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .policy-card p { font-size: 0.88rem; color: var(--gray-600); line-height: 1.7; }
+
+    @media (max-width: 600px) { .policies-grid { grid-template-columns: 1fr; } }
+
+    /* ── HOURS BANNER ─────────────────────────────────────── */
+    .hours-banner {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+      border-radius: var(--radius); padding: 40px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 32px; margin-top: 64px; flex-wrap: wrap;
+    }
+    .hours-banner h3 { font-size: 1.2rem; font-weight: 700; color: var(--white); }
+    .hours-banner p { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+    .hours-banner .badge-hours {
+      background: var(--accent); color: var(--navy); font-weight: 700;
+      font-size: 1.1rem; padding: 14px 28px; border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    /* ── MEMORIAL ─────────────────────────────────────────── */
+    .memorial {
+      max-width: 700px; margin: 0 auto; text-align: center;
+      padding: 48px; border: 1px solid var(--gray-100);
+      border-radius: var(--radius); background: var(--white);
+    }
+    .memorial .icon-memorial {
+      font-size: 2rem; margin-bottom: 16px;
+    }
+    .memorial h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .memorial .role-memorial { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-bottom: 16px; }
+    .memorial p { font-size: 0.9rem; color: var(--gray-600); line-height: 1.7; font-style: italic; }
+
+    /* ── FOOTER ────────────────────────────────────────────── */
+    .footer {
+      background: var(--navy); color: rgba(255,255,255,0.5); padding: 60px 24px 32px;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px;
+    }
+    .footer h4 {
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
+    }
+    .footer-brand p { margin-bottom: 12px; font-size: 0.88rem; line-height: 1.7; }
+    .footer-brand .tagline-footer {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent); margin-top: 16px;
+    }
+    .footer-links a {
+      display: block; padding: 4px 0; font-size: 0.88rem;
+      color: rgba(255,255,255,0.5); transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-contact a {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 0; font-size: 0.88rem;
+      color: rgba(255,255,255,0.5); transition: color 0.2s ease;
+    }
+    .footer-contact a:hover { color: var(--accent); }
+    .footer-bottom {
+      max-width: 1200px; margin: 40px auto 0;
+      padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center; font-size: 0.8rem;
+    }
+    @media (max-width: 768px) {
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+
+    /* ── UTILITY ───────────────────────────────────────────── */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
+  <!-- Splash (template infrastructure) -->
   <div id="splash-green" class="splash"><div class="splash-title">Website Ready</div><img id="splash-logo" src="" alt=""></div>
 
-  <!-- YOUR PAGE CONTENT HERE -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- NAVIGATION                                             -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-brand">
+        PFC Associates
+        <span class="badge">D.C. CLINIC</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#staff">Staff</a>
+        <a href="#faq">FAQ</a>
+        <a href="#resources">Resources</a>
+      </div>
+      <a href="tel:2028547400" class="nav-cta">Call (202) 854-7400</a>
+    </div>
+  </nav>
 
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- HERO                                                   -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-eyebrow">D.C. Police &amp; Fire Clinic</div>
+        <h1>Protecting Those Who <span class="highlight">Protect &amp; Serve</span></h1>
+        <p>PFC Associates provides comprehensive occupational and preventive medical services to the District of Columbia's police officers and firefighters — keeping our first responders healthy, resilient, and ready.</p>
+        <div class="hero-buttons">
+          <a href="#services" class="btn-primary">Our Services &#8595;</a>
+          <a href="#staff" class="btn-outline">Meet the Team &#8594;</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-number">6,000+</div>
+          <div class="stat-label">Officers &amp; Firefighters Served</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">9</div>
+          <div class="stat-label">Medical Service Lines</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">16hrs</div>
+          <div class="stat-label">Daily Clinic Hours</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">After-Hours ER Access</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ABOUT / MISSION                                        -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="about-grid fade-in">
+        <div class="about-content">
+          <div class="section-header" style="text-align:left; margin-bottom:32px;">
+            <div class="eyebrow">Who We Are</div>
+            <h2>A Unique Public-Private Partnership</h2>
+          </div>
+          <p>PFC Associates, a joint venture of Providence Hospital and the Washington Hospital Center, initiated a unique privatization project with the government of the District of Columbia to deliver occupational medicine and behavioral health services to the city's first responders.</p>
+          <div class="about-features">
+            <div class="about-feature">
+              <div class="icon">&#9733;</div>
+              <div>
+                <h4>Quality Medical Services</h4>
+                <p>Partnerships that improve the quality of medical care for police officers and firefighters.</p>
+              </div>
+            </div>
+            <div class="about-feature">
+              <div class="icon">&#9829;</div>
+              <div>
+                <h4>Workforce Productivity</h4>
+                <p>Boosting public safety workforce health and operational readiness.</p>
+              </div>
+            </div>
+            <div class="about-feature">
+              <div class="icon">&#10003;</div>
+              <div>
+                <h4>Cost Savings</h4>
+                <p>Generating significant cost savings for the District of Columbia.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual">
+          <div class="mission-label">Our Mission</div>
+          <blockquote>PFC Associates, LLC, will develop and practice innovative approaches to appraising, initiating, maintaining, and restoring the physical, psychological and emotional health of Police Officers, Firefighters and other members covered in the District of Columbia whom we serve.</blockquote>
+          <div class="divider"></div>
+          <div class="tagline">PROTECTING AND SERVING THOSE WHO PROTECT AND SERVE US</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SERVICES                                               -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section section-dark" id="services">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">What We Do</div>
+        <h2>Comprehensive Medical Services</h2>
+        <p>From routine fitness-for-duty exams to behavioral health counseling, we offer a full spectrum of occupational medicine for D.C.'s first responders.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card fade-in">
+          <div class="service-icon">&#128203;</div>
+          <h3>Physical Examinations</h3>
+          <p>Annual and biennial Fitness for Duty Exams, Pre-Employment, Return to Duty, and Retirement examinations.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#9889;</div>
+          <h3>Injury Management</h3>
+          <p>Acute work-related injury treatment, short-term disability management, and duty status assessments.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#128172;</div>
+          <h3>Behavioral Health</h3>
+          <p>Counseling for occupational illness, applicant screening, fitness evaluations, and post-critical incident assessments.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#129514;</div>
+          <h3>COVID-19 Testing</h3>
+          <p>On-site testing conducted at MPD or FEMS Medical Services request with advance registration.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#128147;</div>
+          <h3>Stress Tests</h3>
+          <p>Cardiac function evaluation during physical activity using treadmill or stationary bike with vital monitoring.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#127788;</div>
+          <h3>Spirometry Testing</h3>
+          <p>NIOSH-approved pulmonary function measurement of air volume and flow capacity.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#9876;</div>
+          <h3>Wellness Services</h3>
+          <p>Immunizations, nutritional guidance, smoking cessation, TB screening, flu shots, cancer screening, and stress reduction.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#128196;</div>
+          <h3>Case Management</h3>
+          <p>Coordination of care for timely, efficient treatment with designated RN Case Managers.</p>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-icon">&#128737;</div>
+          <h3>Bloodborne Pathogen</h3>
+          <p>Post-exposure surveillance and treatment services for occupational exposures.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- STAFF                                                  -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section staff-section" id="staff">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Our Team</div>
+        <h2>Leadership &amp; Staff Directory</h2>
+        <p>Dedicated medical professionals committed to the health of D.C.'s first responders.</p>
+      </div>
+
+      <div class="staff-subsection fade-in">
+        <h3>Administrative Team</h3>
+        <div class="staff-grid">
+          <div class="staff-card">
+            <div class="staff-avatar">MS</div>
+            <h4>Marian Stamps</h4>
+            <div class="role">Chief Operating Officer</div>
+            <div class="credentials">MHSA, BSN, RN</div>
+            <a href="tel:2028547400" class="phone">&#9742; (202) 854-7400</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">OM</div>
+            <h4>Dr. Olusola Malomo</h4>
+            <div class="role">Medical Director</div>
+            <div class="credentials">M.D.</div>
+            <a href="tel:2028547400" class="phone">&#9742; (202) 854-7400</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">JS</div>
+            <h4>Dr. Jeremiah Stubbs</h4>
+            <div class="role">Associate Medical Director</div>
+            <div class="credentials">M.D.</div>
+            <a href="tel:2028547400" class="phone">&#9742; (202) 854-7400</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">BM</div>
+            <h4>Breanna Markenson-Bussel</h4>
+            <div class="role">BHS Director</div>
+            <div class="credentials">Psy.D</div>
+            <a href="tel:2028547434" class="phone">&#9742; (202) 854-7434</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">CJ</div>
+            <h4>Courtney Jones</h4>
+            <div class="role">Manager, Clinical &amp; IT</div>
+            <div class="credentials">MHIA, BSN, RN</div>
+            <a href="tel:2028547400" class="phone">&#9742; (202) 854-7400</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">RP</div>
+            <h4>Richard Pointer</h4>
+            <div class="role">Manager, Financial Services</div>
+            <div class="credentials">&nbsp;</div>
+            <a href="tel:2028547434" class="phone">&#9742; (202) 854-7434</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="staff-subsection fade-in">
+        <h3>Agency Representatives</h3>
+        <div class="staff-grid">
+          <div class="staff-card">
+            <div class="staff-avatar">MM</div>
+            <h4>Matthew Miranda</h4>
+            <div class="role">Director of Medical Services MPD/COTR</div>
+            <div class="credentials">&nbsp;</div>
+            <a href="tel:2028547731" class="phone">&#9742; (202) 854-7731</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">EW</div>
+            <h4>Erik Wiklund</h4>
+            <div class="role">Battalion Fire Chief &mdash; Medical Services Officer</div>
+            <div class="credentials">&nbsp;</div>
+            <a href="tel:2028547508" class="phone">&#9742; (202) 854-7508</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">KD</div>
+            <h4>Sgt. Kristine D'Amico</h4>
+            <div class="role">U.S. Secret Service</div>
+            <div class="credentials">&nbsp;</div>
+            <a href="tel:2024066684" class="phone">&#9742; (202) 406-6684</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">SS</div>
+            <h4>Sgt. Steven R. Somers</h4>
+            <div class="role">U.S. Park Police</div>
+            <div class="credentials">&nbsp;</div>
+            <a href="tel:2026103522" class="phone">&#9742; (202) 610-3522</a>
+          </div>
+          <div class="staff-card">
+            <div class="staff-avatar">ML</div>
+            <h4>Morena Lancaster</h4>
+            <div class="role">Deputy Chief</div>
+            <div class="credentials">&nbsp;</div>
+            <a href="tel:2026988112" class="phone">&#9742; (202) 698-8112</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FAQ                                                    -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section section-navy" id="faq">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Common Questions</div>
+        <h2>Frequently Asked Questions</h2>
+        <p>Quick answers about clinic hours, appointments, and patient services.</p>
+      </div>
+      <div class="faq-list fade-in">
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What are the clinic's operating hours?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            The Police and Fire Clinic is open <strong>0700 &ndash; 2300 hours, Monday through Friday</strong>. The clinic is closed during major holidays.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Where can I go for after-hours care?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            When the clinic is closed, you may visit:<br><br>
+            <strong>Emergency Rooms:</strong><br>
+            &bull; MedStar Washington Hospital Center<br>
+            &bull; MedStar Georgetown University Hospital Center<br><br>
+            <strong>MedStar Prompt Care:</strong><br>
+            &bull; Adams Morgan: 1805 Columbia Road N.W. &mdash; (202) 797-4960, 8AM&ndash;8PM daily<br>
+            &bull; Capitol Hill: 228 7th Street S.E. &mdash; (202) 698-0795, 8AM&ndash;8PM daily<br><br>
+            <strong>Providence Urgent Care Center:</strong><br>
+            &bull; 11500 Varnum Street N.E. &mdash; (202) 854-7001, Mon&ndash;Fri 8AM&ndash;10PM; Sat&ndash;Sun 8AM&ndash;3PM
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do I contact someone in a mental health crisis?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            Contact the <strong>National Suicide Prevention Hotline at 1-800-273-8255</strong> for 24/7 trained counselors. You can also dial <strong>988</strong> (Suicide &amp; Crisis Lifeline).
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Does PFC cover visits to outside doctors?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            PFC does not cover expenses for outside specialists without a referral. Private insurance may deny reimbursement due to workers' compensation classification.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What should I wear for physical therapy?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            Wear <strong>loose-fitting sweats</strong> for lower body injuries, <strong>sleeveless shirts</strong> for shoulder issues, and <strong>supportive shoes</strong> &mdash; never flip-flops.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What should I know about MRI procedures?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            You may wear regular clothing, but <strong>no jewelry, hair pins, or metal objects</strong>. If sedation is required, you must arrange transportation in advance.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do I request my medical records?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            Complete a release form including your <strong>name, date of birth, service dates, and signature</strong>. Processing takes <strong>3&ndash;5 business days</strong>.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do I reschedule an appointment?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            Contact your <strong>liaison</strong> or your <strong>PFC provider directly</strong> to reschedule.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What documentation should I bring to my appointment?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            Bring a <strong>photo ID</strong>, any relevant <strong>medical records</strong>, and <strong>imaging</strong> related to your injury or condition.
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Is COVID-19 testing available?
+            <span class="arrow">&#9660;</span>
+          </button>
+          <div class="faq-answer"><div class="faq-answer-inner">
+            PFC provides COVID-19 testing for members every <strong>Monday, Wednesday, and Friday starting at 9:30 AM</strong> with advance registration required.
+          </div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- RESOURCES & LINKS                                      -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section section-dark" id="resources">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Resources</div>
+        <h2>Links &amp; Documents</h2>
+        <p>Quick access to agency sites, forms, and reference documents.</p>
+      </div>
+      <div class="resources-grid fade-in">
+        <div class="resource-group">
+          <h3><span class="dot"></span> Agency Links</h3>
+          <div class="resource-list">
+            <a href="https://mpdc.dc.gov/" target="_blank" rel="noopener" class="resource-link">
+              <span class="icon">&#8599;</span> D.C. Metropolitan Police Department
+            </a>
+            <a href="https://fems.dc.gov/" target="_blank" rel="noopener" class="resource-link">
+              <span class="icon">&#8599;</span> D.C. Fire and Emergency Services
+            </a>
+          </div>
+        </div>
+        <div class="resource-group">
+          <h3><span class="dot"></span> Forms &amp; Documents</h3>
+          <div class="resource-list">
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> Disability Retirement at a Glance</a>
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> DCFEMS OB-Article 11: Temporary Physical Disability</a>
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> MPD Medical Services General Order</a>
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> MPD &amp; DCFEMS Retirement Plan Summary</a>
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> Medical Examination Report Form MCSA 5875</a>
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> PFC Applicant Medical Questionnaire</a>
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> PFC Patient Complaint Form</a>
+            <a href="#" class="resource-link"><span class="icon">&#128196;</span> PFC Patient Satisfaction Survey</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Policies -->
+      <div style="margin-top: 64px;">
+        <div class="section-header fade-in" style="margin-bottom: 40px;">
+          <div class="eyebrow">Compliance</div>
+          <h2>Policies &amp; Ethics</h2>
+        </div>
+        <div class="policies-grid fade-in">
+          <div class="policy-card">
+            <h3>&#128274; Confidentiality Policy</h3>
+            <p>Staff maintains confidentiality per District Personnel Manual standards and follows the American College of Occupational and Environmental Medicine's Code of Ethical Conduct.</p>
+          </div>
+          <div class="policy-card">
+            <h3>&#9878; Ethical Guidelines</h3>
+            <p>The Behavioral Health Service adheres to standards from the American Psychological Association, DC Mental Health Information Act, and International Association of Chiefs of Police.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hours Banner -->
+      <div class="hours-banner fade-in">
+        <div>
+          <h3>Clinic Hours</h3>
+          <p>Monday through Friday &mdash; closed major holidays</p>
+        </div>
+        <div class="badge-hours">0700 &ndash; 2300</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- MEMORIAL                                               -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="memorial">
+    <div class="container">
+      <div class="memorial fade-in">
+        <div class="icon-memorial">&#9733;</div>
+        <h3>In Memory of Dr. Taunya Brownlee, M.D.</h3>
+        <div class="role-memorial">Former Associate Medical Director</div>
+        <p>"In grateful appreciation for her dedicated service."</p>
+        <p style="margin-top:8px; font-style:normal; font-size:0.82rem; color:var(--gray-600);">Conference room named in her honor &mdash; August 2016</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FOOTER                                                 -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h4>PFC Associates</h4>
+        <p>A joint venture of Providence Hospital and the Washington Hospital Center, providing occupational and preventive medical services to D.C.'s first responders.</p>
+        <div class="tagline-footer">Protecting and serving those who protect and serve us</div>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#staff">Staff</a>
+        <a href="#faq">FAQ</a>
+        <a href="#resources">Resources</a>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <a href="tel:2028547400">&#9742; (202) 854-7400</a>
+        <a href="tel:2028547434">&#9742; (202) 854-7434 (BHS)</a>
+        <a href="https://mpdc.dc.gov/" target="_blank" rel="noopener">&#8599; MPD Website</a>
+        <a href="https://fems.dc.gov/" target="_blank" rel="noopener">&#8599; FEMS Website</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; PFC Associates, LLC / D.C. Police &amp; Fire Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SCRIPTS                                                -->
+  <!-- ═══════════════════════════════════════════════════════ -->
   <script>
     /* tpl:7f3e9b2d */ // ── CONFIG ──────────────────────────────────────────────────────────
-    // Logo shown on the green "Website Ready" splash screen
     var DEVELOPER_LOGO_URL = 'https://www.shadowaisolutions.com/SAIS%20Logo.png';
     var YOUR_ORG_LOGO_URL = 'https://logoipsum.com/logoipsum-avatar.png';
     var LOGO_URL = DEVELOPER_LOGO_URL;
-
-    // Auto-refresh: set to false to disable build-version polling
     var AUTO_REFRESH = true;
-
-    // Show/hide: set to false to hide the website version indicator
     var SHOW_WEB_VERSION = true;
     // ────────────────────────────────────────────────────────────────────
 
     // Set splash logo from config variable
     document.getElementById('splash-logo').src = LOGO_URL;
 
-    // Clear stale audio-unlocked flag on non-reload navigations (e.g. Chrome "Duplicate Tab")
+    // ── MOBILE NAV TOGGLE ──────────────────────────────────────────────
+    (function() {
+      var toggle = document.getElementById('nav-toggle');
+      var links = document.getElementById('nav-links');
+      toggle.addEventListener('click', function() {
+        links.classList.toggle('open');
+      });
+      // Close nav on link click
+      links.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() { links.classList.remove('open'); });
+      });
+    })();
+
+    // ── NAV SCROLL EFFECT ──────────────────────────────────────────────
+    (function() {
+      var nav = document.getElementById('nav');
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+      });
+    })();
+
+    // ── FAQ ACCORDION ──────────────────────────────────────────────────
+    (function() {
+      document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var item = btn.parentElement;
+          var answer = item.querySelector('.faq-answer');
+          var isOpen = item.classList.contains('open');
+
+          // Close all
+          document.querySelectorAll('.faq-item').forEach(function(el) {
+            el.classList.remove('open');
+            el.querySelector('.faq-answer').style.maxHeight = null;
+            el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          });
+
+          // Open this one if it was closed
+          if (!isOpen) {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+    })();
+
+    // ── FADE-IN ON SCROLL ──────────────────────────────────────────────
+    (function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
+    })();
+
+    // ── TEMPLATE AUDIO / SPLASH / VERSION POLLING ──────────────────────
+    // Clear stale audio-unlocked flag on non-reload navigations
     var _navEntries = performance.getEntriesByType('navigation');
     var _navType = _navEntries.length ? _navEntries[0].type : 'navigate';
-    if (_navType !== 'reload') {
-      sessionStorage.removeItem('audio-unlocked');
-    }
+    if (_navType !== 'reload') { sessionStorage.removeItem('audio-unlocked'); }
 
-    // AudioContext for sound playback — created at load to probe browser audio policy
     var _audioCtx = null;
     try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
     if (_audioCtx) _audioCtx.onstatechange = function() { updateAudioStatus(); };
-    // Attempt auto-resume — browsers allow it if a prior gesture exists for this origin
     var _resumePromise = null;
     if (_audioCtx && _audioCtx.state === 'suspended') _resumePromise = _audioCtx.resume().catch(function() {});
 
@@ -74,16 +1082,12 @@
       var el = document.getElementById('audio-status');
       if (!el) return;
       if (_audioCtx && _audioCtx.state === 'running') {
-        el.textContent = '\u{1F50A}';
-        el.title = 'Sound ready';
+        el.textContent = '\u{1F50A}'; el.title = 'Sound ready';
         sessionStorage.setItem('audio-unlocked', '1');
       } else if (sessionStorage.getItem('audio-unlocked')) {
-        // Audio was unlocked before — a click will restore it instantly
-        el.textContent = '\u{1F50A}';
-        el.title = 'Sound ready';
+        el.textContent = '\u{1F50A}'; el.title = 'Sound ready';
       } else {
-        el.textContent = '\u{1F507}';
-        el.title = 'Sound muted - click page to enable';
+        el.textContent = '\u{1F507}'; el.title = 'Sound muted - click page to enable';
       }
     }
 
@@ -98,20 +1102,16 @@
       try {
         var ctx = _audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         if (ctx.state !== 'running') return;
-        var base64 = dataUrl.split(',')[1];
-        var binary = atob(base64);
+        var base64 = dataUrl.split(',')[1]; var binary = atob(base64);
         var bytes = new Uint8Array(binary.length);
         for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
         ctx.decodeAudioData(bytes.buffer, function(audioBuffer) {
           var source = ctx.createBufferSource();
-          source.buffer = audioBuffer;
-          source.connect(ctx.destination);
-          source.start(0);
+          source.buffer = audioBuffer; source.connect(ctx.destination); source.start(0);
         });
       } catch(e) {}
     }
 
-    // Pre-load sound file from same-origin into localStorage
     function cacheSound(url, key) {
       if (localStorage.getItem(key)) return;
       fetch(url).then(function(res) { return res.blob(); }).then(function(blob) {
@@ -122,13 +1122,11 @@
     }
     cacheSound('sounds/Website_Ready_Voice_1.mp3', 'web-sound-data');
 
-    // Show splash + play sound on update-triggered reloads
     var _soundPlayed = false;
     if (sessionStorage.getItem('web-pending-sound')) {
       sessionStorage.removeItem('web-pending-sound');
       if (navigator.vibrate) navigator.vibrate(200);
       var splash = document.getElementById('splash-green');
-      // Play sound only if AudioContext is running (or becomes running via auto-resume)
       if (_audioCtx && !_soundPlayed) {
         _soundPlayed = true;
         var _playNow = function() {
@@ -136,12 +1134,8 @@
           if (soundData) { playSoundFromDataUrl(soundData); }
           else { var a = new Audio('sounds/Website_Ready_Voice_1.mp3'); a.play().catch(function() {}); }
         };
-        if (_audioCtx.state === 'running') {
-          _playNow();
-        } else if (_resumePromise) {
-          // Chain onto the resume promise so playback fires as soon as resume completes
-          _resumePromise.then(function() { if (_audioCtx.state === 'running') _playNow(); });
-        }
+        if (_audioCtx.state === 'running') { _playNow(); }
+        else if (_resumePromise) { _resumePromise.then(function() { if (_audioCtx.state === 'running') _playNow(); }); }
       }
       if (splash) {
         splash.style.display = 'flex';
@@ -152,23 +1146,20 @@
       }
     }
 
-    // Auto-refresh: poll version.txt every 10s for build-version changes
+    // Auto-refresh: poll version.txt every 10s
     (function() {
       var POLL_INTERVAL = 10000;
       var currentVersion = (document.querySelector('meta[name="build-version"]') || {}).content;
-      if (!currentVersion) return;
-      if (!AUTO_REFRESH) return;
+      if (!currentVersion || !AUTO_REFRESH) return;
 
       var indicator = document.createElement('div');
       indicator.id = 'version-indicator';
       indicator.innerHTML = '<span class="dot"></span><span class="label">v' + currentVersion + '</span><span id="audio-status"></span>';
       if (SHOW_WEB_VERSION) document.body.appendChild(indicator);
       updateAudioStatus();
-      // Catch the case where onstatechange fired before the element existed
       if (_resumePromise) _resumePromise.then(function() { updateAudioStatus(); });
       var dot = indicator.querySelector('.dot');
 
-      // Resolve <page-name>-version.txt URL relative to the current page
       var basePath = window.location.href.split('?')[0];
       var pageName = basePath.substring(basePath.lastIndexOf('/') + 1).replace('.html', '');
       if (!pageName) pageName = 'index';
@@ -199,7 +1190,7 @@
       setTimeout(checkForUpdate, POLL_INTERVAL);
     })();
 
-    // Screen Wake Lock — keep screen on while page is visible
+    // Screen Wake Lock
     var _wakeLock = null;
     async function requestWakeLock() {
       try {
@@ -217,23 +1208,3 @@
 </body>
 </html>
 <!-- Developed by: PFCAssociates -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

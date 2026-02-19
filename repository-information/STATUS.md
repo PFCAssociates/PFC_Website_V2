@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `live-site-pages/index.html` | v01.00w | [View](https://PFCAssociates.github.io/PFC_Website_V2/) | Active |
+| Landing Page | `live-site-pages/index.html` | v01.01w | [View](https://PFCAssociates.github.io/PFC_Website_V2/) | Active |
 
 ## GAS Projects
 
